@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from comum import *
 
 OPOSICAO = re.compile(r"\bn[ãa]o (?:[ée]|se trata de|significa|basta)\b[^.!?\n]{0,60}?[,;—–-]\s*(?:mas |e sim |[ée] )", re.I)
+NAO_SEJA = re.compile(r"\bn[ãa]o (?:seja|ser[áa]|est[áa]|esteja|foi|era)\b[^.!?\n]{0,80}?,\s*mas\b", re.I)
 MAIS_DO_QUE = re.compile(r"\bmais do que [^.!?\n]{1,40}?, [ée]\b", re.I)
 CLICHES = ["vivemos em um mundo", "vivemos num mundo", "nunca foi tão importante", "na era digital", "o futuro já chegou",
            "fora da caixa", "novo paradigma", "cada vez mais", "nos dias de hoje", "precisamos refletir",
@@ -42,7 +43,7 @@ def ver_mais(t, n=210):
 def checar_texto(t, p, carrossel=False):
     av = []  # (nivel, msg)  nivel: ERRO | ATENÇÃO | nota
     m = medir(t); v = p.get('voz_medidas') or {}
-    n_op = len(OPOSICAO.findall(t)) + len(MAIS_DO_QUE.findall(t))
+    n_op = len(OPOSICAO.findall(t)) + len(MAIS_DO_QUE.findall(t)) + len(NAO_SEJA.findall(t))
     if n_op >= 2: av.append(('ATENÇÃO', f'oposição "não é X, é Y" {n_op}x: cacoete de IA. Deixe no máximo uma.'))
     elif n_op == 1: av.append(('nota', 'uma oposição "não é X, é Y": ok se for a ideia central; não repita.'))
     for nome, lista in (('clichê', CLICHES), ('transição mecânica', TRANSICOES), ('vocabulário de IA', VOCAB_IA)):

@@ -38,10 +38,12 @@ e deixe ela ajustar. Ex.: "erro comum que eu vejo", "bastidores do trabalho", "l
 - **Já publica:** peça 5 a 20 posts dela (colar aqui ou arquivo), separados por uma linha `---`. Salve em um arquivo
   e rode `$PY $N/tools/voz.py medir <arquivo>`. Depois leia os posts e escreva `~/.config/assistente-linkedin/voz.md`:
   como ela abre, tamanho e ritmo das frases, vocabulário e expressões que usa, como fecha, o que ela **nunca** faz,
-  2–3 trechos curtos que são a cara dela. Use também as quatro perguntas sobre um post antigo: por que publiquei,
+  2–3 trechos curtos que são a cara dela (só trechos neutros, nunca nada pessoal ou de terceiros). Use também as quatro perguntas sobre um post antigo: por que publiquei,
   o que queria provocar, o que aconteceu, o que faria diferente hoje.
-- **Ainda não publica:** peça 2–3 textos que ela escreveu em qualquer lugar (e-mail, mensagem longa, artigo) para medir
-  a voz do mesmo jeito; se não houver nada, escreva `voz.md` a partir de como ela fala nesta conversa e avise que a voz
+- **Ainda não publica:** peça 2–3 textos que ela escreveu **para outras pessoas lerem** (e-mail de trabalho, post em
+  outra rede, artigo, mensagem longa explicando algo). Avise antes: nada de diário ou conversa íntima; se vier algo assim,
+  use só o que for texto para leitores, diga que não guarda cópia e que nada do conteúdo vai para os posts. Meça a voz
+  do mesmo jeito; se não houver nada, escreva `voz.md` a partir de como ela fala nesta conversa e avise que a voz
   fica aproximada. Faça o **garimpo**: 5 a 10 situações que ela viveu, sabe, observa ou pensa, e grave como banco de
   ideias em `~/.config/assistente-linkedin/notas.md` (seção "Banco de ideias").
 - Com menos de 5 textos, diga claramente que a voz ficará aproximada.
