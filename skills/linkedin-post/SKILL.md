@@ -52,6 +52,18 @@ Mostre: o trecho antes do "ver mais", o post inteiro, a intenção e a métrica 
 ler em voz alta e mexer à vontade; aplique as mudanças dela. Lembre: **a skill não publica**. Ela cola no LinkedIn.
 Depois de publicar: `$PY $N/tools/memoria.py registrar <pasta> --link <url>`.
 
+## Artigo (texto longo do LinkedIn)
+Quando a ideia pede mais que um post (argumento com fonte, várias etapas, texto acima de ~3.000 caracteres), ou a
+pessoa trouxer um artigo pronto: mesma entrevista, mesmas regras, e `checar.py` em `<pasta>/artigo.md`. Um artigo
+precisa de três coisas além do texto:
+1. **Título do artigo** (até ~100 caracteres): claro, com a ideia ou a pergunta central e as palavras que o público
+   buscaria. Proponha 3 opções com pesos diferentes (mais direto, mais pergunta, mais provocativo) e deixe ela escolher.
+2. **Capa** (1920×1080): `$PY $N/tools/capa.py <pasta> "<título curto com *destaque*>" "<linha de apoio opcional>"`.
+   O título da capa pode ser mais curto que o do artigo (até ~8 palavras: é lido em miniatura). Abra a imagem e confira.
+3. **Post de divulgação** (`post.md`): o artigo não se espalha sozinho. Um post curto com a abertura do argumento
+   e o convite para ler, conferido com `checar.py`.
+Referências do artigo vão no fim do texto, com link quando houver.
+
 ## 5. Resultado (quando ela trouxer os números, ~48 h ou 7 dias depois)
 `$PY $N/tools/memoria.py resultado <pasta> impressoes=… reacoes=… comentarios=… compartilhamentos=… [salvamentos=…
 seguidores=… visitas_perfil=…]`. Leia o resultado **contra a intenção** (métrica sem objetivo é só número), sem

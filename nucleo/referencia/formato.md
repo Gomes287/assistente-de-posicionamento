@@ -7,6 +7,8 @@
 - Carrossel = documento PDF enviado pelo botão de documento; o LinkedIn pede um **título do documento**, que aparece
   sobre o carrossel. Formato vertical 4:5 (1080×1350) ocupa mais tela no celular.
 - Hashtags são opcionais; poucas e específicas.
+- Artigo (texto longo): tem título próprio e imagem de capa (1920×1080, 16:9). A capa aparece no feed quando o artigo
+  é compartilhado, então funciona como a capa de um carrossel: título curto, legível em miniatura.
 
 ## Folclore (não trate como regra; teste se quiser)
 "Link no corpo derruba o alcance", "poste às 8h", "responda todos os comentários na primeira hora", "nunca edite o

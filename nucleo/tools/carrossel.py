@@ -182,7 +182,7 @@ document.querySelectorAll('.area').forEach(a=>{{
 
 def rodar(args):
     subprocess.run([chrome(), '--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check', '--hide-scrollbars',
-                    '--virtual-time-budget=4000', *args], check=True, capture_output=True, timeout=120)
+                    '--virtual-time-budget=4000', '--force-device-scale-factor=1', *args], check=True, capture_output=True, timeout=120)
 
 
 def render(p, slides, pasta, so_previa=False):
