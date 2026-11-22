@@ -1,0 +1,10 @@
+{
+  "name": "assistente-linkedin",
+  "version": "0.1.0",
+  "description": "Assistente de publicação no LinkedIn em português: da experiência à ideia, post com a sua voz (sem cara de IA) e carrossel em PDF, com memória do que funcionou.",
+  "author": { "name": "Pedro Gomes" },
+  "homepage": "https://github.com/Gomes287/assistente-linkedin",
+  "repository": "https://github.com/Gomes287/assistente-linkedin",
+  "license": "MIT",
+  "keywords": ["linkedin", "conteudo", "carrossel", "escrita", "autoria", "portugues"]
+}

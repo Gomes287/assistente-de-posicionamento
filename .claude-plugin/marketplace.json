@@ -1,0 +1,12 @@
+{
+  "name": "assistente-linkedin",
+  "owner": { "name": "Pedro Gomes" },
+  "description": "Assistente de publicação no LinkedIn em português.",
+  "plugins": [
+    {
+      "name": "assistente-linkedin",
+      "source": "./",
+      "description": "Da experiência à ideia, post com a sua voz e carrossel em PDF, com memória do que funcionou."
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{"titulo_documento": "A pergunta errada custa mais caro: 3 perguntas antes de decidir",
+ "slides": [
+  {"tipo": "capa", "rotulo": "Advisory em saúde", "titulo": "A pergunta *errada* custa mais caro", "subtitulo": "Três perguntas para fazer antes de comprar, cortar ou crescer."},
+  {"tipo": "texto", "titulo": "Toda empresa chega com uma pergunta pronta", "texto": "Qual sistema comprar? Onde cortar custo? Como crescer?"},
+  {"tipo": "texto", "titulo": "Nenhuma pergunta é *neutra*", "texto": "Quem pergunta qual sistema comprar já decidiu que a tecnologia é a solução, antes de saber se o processo está claro."},
+  {"tipo": "citacao", "texto": "Responder bem a uma pergunta mal feita gera uma recomendação correta e *inútil*."},
+  {"tipo": "contraste", "titulo": "Na saúde, isso pesa mais", "esquerda": {"rotulo": "A pergunta", "texto": "Onde cortar custo?"}, "direita": {"rotulo": "O efeito", "texto": "Corte no lugar errado volta como retrabalho na assistência."}},
+  {"tipo": "lista", "titulo": "Antes de recomendar, eu pergunto", "itens": ["Que decisão está em jogo?", "Que premissa estamos aceitando sem discutir?", "O que ficou de fora da pergunta?"]},
+  {"tipo": "final", "pergunta": "Em que situação você já viu uma pergunta errada *virar projeto*?"}
+ ]}
