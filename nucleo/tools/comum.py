@@ -63,7 +63,7 @@ def slug(s, n=50):
 
 # ---- medidas de texto ---------------------------------------------------------------------------------------------
 EMOJI = re.compile('[\U0001F300-\U0001FAFF\U00002600-\U000027BF\U0001F000-\U0001F2FF⭐⬆↔-⇿✅❌]')
-PRIMEIRA = re.compile(r'\b(eu|meu|minha|meus|minhas|me|comigo|mim)\b', re.I)
+PRIMEIRA = re.compile(r'\b(eu|meu|minha|meus|minhas|me|comigo|mim|a gente|n[óo]s|nosso|nossa|nossos|nossas)\b', re.I)
 
 
 def frases(t):
