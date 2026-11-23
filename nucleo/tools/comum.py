@@ -15,7 +15,21 @@ except Exception:
     pass
 
 INTENCOES = ('amplificar', 'compartilhar', 'conversar', 'posicionar')
+ESTRUTURAS = ('cena', 'numero', 'confissao', 'contraintuitivo', 'pergunta', 'antes_depois', 'lista_curta', 'carta',
+              'dialogo', 'bastidor', 'leitura')
 CORES_PADRAO = {"fundo": "#0F2A3D", "texto": "#F4F1EA", "acento": "#E3B25B", "suave": "#16384F"}
+# paletas curadas (fundo escuro, texto claro, destaque, suave). A configuração oferece 3, escolhidas a partir do nome,
+# para quem não tem identidade visual; ninguém fica com a padrão sem escolher.
+CURADAS = {
+    "petroleo-ambar":  {"fundo": "#0F2A3D", "texto": "#F4F1EA", "acento": "#E3B25B", "suave": "#16384F"},
+    "grafite-coral":   {"fundo": "#1E2124", "texto": "#F5F2EE", "acento": "#FF7A59", "suave": "#2C3135"},
+    "verde-musgo":     {"fundo": "#16281F", "texto": "#F1EFE6", "acento": "#C9D46B", "suave": "#21392D"},
+    "vinho-areia":     {"fundo": "#3A1420", "texto": "#F6EEE6", "acento": "#E8B98F", "suave": "#4D1D2B"},
+    "marinho-ciano":   {"fundo": "#0B1D3A", "texto": "#EEF3F8", "acento": "#3CC6D8", "suave": "#13294F"},
+    "terracota":       {"fundo": "#2B1A14", "texto": "#F7EFE7", "acento": "#E07A4F", "suave": "#3B251C"},
+    "berinjela-lima":  {"fundo": "#241A33", "texto": "#F3F0F7", "acento": "#B8E06A", "suave": "#33264A"},
+    "carvao-ouro":     {"fundo": "#121212", "texto": "#F2EEE6", "acento": "#D4AF37", "suave": "#222222"},
+}
 PERFIL_PADRAO = {
     "nome": "", "titulo": "", "profissao": "", "arroba": "",
     "conselho": "nenhum",                 # "CFM" liga o módulo de médicos; outro nome = só lembrete
@@ -27,7 +41,7 @@ PERFIL_PADRAO = {
     "lembrado_por": "",                   # conhecimento | experiencia | visao | causa
     "posicionamento": "",                 # uma frase: pelo que quero ser lembrado
     "linhas": [],                         # [{"nome": "...", "descricao": "..."}], 3 fixas + 1 "teste"
-    "cores": CORES_PADRAO, "fonte_titulo": "Inter", "foto": "",
+    "cores": CORES_PADRAO, "cores_escolhidas": False, "tema": "editorial", "fonte_titulo": "Inter", "foto": "", "logo": "",
     "pasta_saida": str(Path.home() / 'Documents/LinkedIn'),
     "voz_medidas": {},
 }
@@ -87,6 +101,8 @@ def medir(t):
         'frases': len(fs),
         'palavras_por_frase': round(statistics.mean(tam), 1),
         'frase_longa_p90': sorted(tam)[int(0.9 * (len(tam) - 1))],
+        'variacao_frase': round(statistics.pstdev(tam), 1),
+        'frases_curtas_pct': round(100 * sum(1 for x in tam if x <= 6) / len(tam)),
         'paragrafos': len(ps),
         'palavras_por_paragrafo': round(statistics.mean([len(p.split()) for p in ps]), 1) if ps else 0,
         'primeira_pessoa_por_100': round(100 * (len(PRIMEIRA.findall(t)) + len(PRIMEIRA_VERBO.findall(t))) / max(1, len(pal)), 1),

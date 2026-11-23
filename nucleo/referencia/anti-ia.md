@@ -20,6 +20,11 @@ detecta os que dá para detectar; os outros você confere lendo.
 - **Parágrafos simétricos:** todos com o mesmo tamanho, como se saíssem do mesmo molde.
 - **Hashtags demais** (mais de 3–5).
 
+## Cacoetes da própria skill
+Ao fugir dos vícios clássicos, a skill cria os dela ("Repara que…", "Em que situação você já viu…?", "e é aí que…").
+Com mil pessoas usando, isso vira uma assinatura reconhecível. `checar.py` tem a lista (`CACOETES_SKILL`); quando
+aparecer um novo, acrescente. Se a expressão estiver em `voz.md`, é da pessoa e pode ficar.
+
 ## Conferidos lendo
 - Frase de efeito no fim de cada parágrafo.
 - Resumo no final repetindo o que já foi dito (o fim deve ampliar, não resumir).

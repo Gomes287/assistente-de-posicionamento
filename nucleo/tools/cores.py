@@ -1,5 +1,6 @@
 """Tira as cores principais de uma imagem (logo, banner, print do perfil) usando o Chrome; nada para instalar.
 uso: cores.py <imagem>     → lista as cores (da mais presente para a menos) e sugere fundo/texto/acento/suave
+     cores.py --curadas "<nome>"  → 3 paletas prontas (para quem não tem identidade visual)
 O Claude confere a sugestão olhando a imagem e ajusta com a pessoa antes de gravar no perfil.
 """
 import sys, json, base64, tempfile, shutil, re, html
@@ -51,6 +52,14 @@ def sat(rgb):
 
 if __name__ == '__main__':
     if len(sys.argv) < 2: sys.exit(__doc__)
+    if sys.argv[1] == '--curadas':
+        import hashlib
+        from comum import CURADAS
+        nomes = sorted(CURADAS); s = int(hashlib.sha1((sys.argv[2] if len(sys.argv) > 2 else 'x').encode()).hexdigest(), 16)
+        escolha = [nomes[(s + k * 3) % len(nomes)] for k in range(3)]
+        print('três paletas para oferecer (mostre com carrossel.py --demo depois de gravar a escolhida):')
+        for n in escolha: print(f'  {n}: {json.dumps(CURADAS[n])}')
+        sys.exit()
     f = Path(sys.argv[1]).expanduser()
     tipo = {'jpg': 'jpeg', 'jpeg': 'jpeg', 'png': 'png', 'webp': 'webp', 'gif': 'gif'}.get(f.suffix.lower().strip('.'), 'png')
     uri = f'data:image/{tipo};base64,' + base64.b64encode(f.read_bytes()).decode()

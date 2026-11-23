@@ -17,6 +17,8 @@ def faltando(p):
         f.append('linhas editoriais (3 fixas + 1 teste)')
     if not p.get('voz_medidas'):
         f.append('voz (rode voz.py medir com posts antigos, ou pule se a pessoa nunca publicou)')
+    if not p.get('cores_escolhidas'):
+        f.append('cores (escolha uma paleta: imagem da pessoa com cores.py, ou uma das curadas com cores.py --curadas)')
     if not VOZ.exists():
         f.append('voz.md (descrição da voz)')
     if p.get('conselho') == 'CFM' and not p.get('identificacao'):

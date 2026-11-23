@@ -16,7 +16,8 @@ Antes: `$PY $N/tools/perfil.py checar` (sem perfil → **linkedin-config**). Lei
 (+ `conselhos/cfm.md` se CFM, `conselhos/sigilo.md` se `sigilo`).
 
 ## 1. Ideia antes de slide
-Faça a entrevista do **linkedin-post**, passo 1 (experiência, ideia em uma frase, ponto de vista, para quem, intenção).
+Faça a entrevista do **linkedin-post**, passo 1 (experiência, ideia em uma frase, ponto de vista, para quem, intenção,
+**detalhe único**). O detalhe único entra em pelo menos um slide.
 Se já existe a pasta com `ideia.json` (porque começou como post), use a mesma. Senão: `$PY $N/tools/novo.py "<título>"`.
 Carrossel combina com `compartilhar` e `amplificar`: conhecimento em passos, contraste, erro comum, lista curta. Se a
 ideia for uma opinião que pede conversa, sugira post de texto.
@@ -31,7 +32,7 @@ ideia for uma opinião que pede conversa, sugira post de texto.
 - Só o que ela contou; no registro dela (autoria). Slide não é parágrafo: se passou de ~40 palavras, divida.
 
 ## 3. Gerar e conferir
-`$PY $N/tools/carrossel.py <pasta>` valida (ERRO para: número sem fonte, falta de título do documento, CFM sem
+O visual (cores, família de layout, fonte, foto, logo) vem do perfil. `$PY $N/tools/carrossel.py <pasta>` valida (ERRO para: número sem fonte, falta de título do documento, CFM sem
 identificação) e avisa cacoetes de IA. Corrija e rode de novo. **Abra `previa.png` e olhe**: texto apertado, slide
 vazio demais, quebra feia, destaque no lugar errado. Ajuste o JSON até ficar bom.
 Se CFM: a identificação sai no rodapé da capa e do último slide; confira também `cfm.md`.

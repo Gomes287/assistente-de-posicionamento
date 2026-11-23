@@ -13,7 +13,7 @@ description: >-
 `SK` = a pasta deste SKILL.md. `N=$(cd -P "$SK/../../nucleo" && pwd)` · `PY=python3`.
 Antes de tudo: `$PY $N/tools/perfil.py checar` (se faltar perfil, use a skill **linkedin-config**). Leia
 `~/.config/assistente-de-posicionamento/voz.md`, `~/.config/assistente-de-posicionamento/notas.md` (regras dela, valem acima destas) e
-`$N/referencia/autoria.md`, `anti-ia.md`, `intencao.md`, `formato.md`. Se `conselho` = CFM: `conselhos/cfm.md`. Se `sigilo` = true: `conselhos/sigilo.md` (sempre).
+`$N/referencia/autoria.md`, `anti-ia.md`, `intencao.md`, `formato.md`, `estruturas.md`. Se `conselho` = CFM: `conselhos/cfm.md`. Se `sigilo` = true: `conselhos/sigilo.md` (sempre).
 `$PY $N/tools/memoria.py resumo` mostra o que já foi publicado (não repita ideia; veja que linha está sem post).
 
 ## 1. Entrevista (antes de escrever qualquer coisa)
@@ -30,20 +30,29 @@ dele e pergunte só o que faltar.
 6. **Formato:** proponha pelo quadro de `intencao.md` §3 e diga por quê. Carrossel → skill **linkedin-carrossel**
    (mesma pasta e mesmo ideia.json).
 7. Fontes de todo número.
+8. **O detalhe que só ela sabe** (lugar, número da experiência dela, frase dita, decisão, o que sentiu). Sem ele,
+   não escreva: é o que impede o post de parecer o de outra pessoa (`estruturas.md`).
+9. **Estrutura:** escolha no catálogo de `estruturas.md` a que serve à ideia, evitando as dos últimos posts dela
+   (`memoria.py resumo` mostra quais foram).
 
 Crie a pasta: `$PY $N/tools/novo.py "<título de trabalho>"` e preencha `<pasta>/ideia.json` com as respostas
-(`metrica_principal` coerente com a intenção).
+(`metrica_principal` coerente com a intenção, `detalhe_unico` e `estrutura` preenchidos).
 
 ## 2. Rascunho
 Escreva `<pasta>/post.md` (só o texto do post, pronto para colar):
+- Siga a **estrutura escolhida** (não o molde de sempre) e use o **detalhe único** de forma visível.
 - Abertura concreta que funcione sozinha antes do "…ver mais" (`formato.md`).
 - Do caso ao princípio; a ideia dita uma vez; fim que amplia (não resume).
 - Só o que ela contou (autoria, regra 2). No registro dela: `voz.md` é teto, não inspiração (regra 3).
-- `conversar`: termine com uma pergunta específica, de preferência pedindo a experiência do leitor.
+- Varie o fim (`estruturas.md`, "Fins"). Pergunta só quando a intenção for `conversar`, e específica, com as
+  palavras do assunto (não "em que situação você já viu isso?").
+- Use as expressões literais dela (`voz.md`), não as suas.
 - Hashtags: 0 a 3, se ela costuma usar.
 
 ## 3. Conferir
-`$PY $N/tools/checar.py <pasta>/post.md`. Corrija todo ERRO e ATENÇÃO (ou explique a ela por que manter). Depois
+`$PY $N/tools/checar.py <pasta>/post.md`: além dos cacoetes de IA, ele aponta cacoetes da própria skill, ritmo
+monótono, detalhe único ausente e trechos ou aberturas repetidos de posts anteriores dela. Corrija todo ERRO e
+ATENÇÃO (ou explique a ela por que manter). Depois
 releia contra `anti-ia.md` ("conferidos lendo") e, se CFM, a checagem de `cfm.md`. Pergunte-se: tem experiência dela?
 Se não tem, volte à entrevista (regra 4).
 
@@ -58,7 +67,8 @@ pessoa trouxer um artigo pronto: mesma entrevista, mesmas regras, e `checar.py <
 precisa de três coisas além do texto:
 1. **Título do artigo** (até ~100 caracteres): claro, com a ideia ou a pergunta central e as palavras que o público
    buscaria. Proponha 3 opções com pesos diferentes (mais direto, mais pergunta, mais provocativo) e deixe ela escolher.
-2. **Capa** (1920×1080): `$PY $N/tools/capa.py <pasta> "<título curto com *destaque*>" "<linha de apoio opcional>"`.
+2. **Capa** (1920×1080): `$PY $N/tools/capa.py <pasta> "<título curto com *destaque*>" "<linha de apoio opcional>"`
+   (usa a família de layout do perfil; `--tema` troca só nesta capa).
    O título da capa pode ser mais curto que o do artigo (até ~8 palavras: é lido em miniatura). Abra a imagem e confira.
 3. **Post de divulgação** (`post.md`): o artigo não se espalha sozinho. Um post curto com a abertura do argumento
    e o convite para ler, conferido com `checar.py`.

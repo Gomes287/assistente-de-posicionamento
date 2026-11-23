@@ -3,7 +3,7 @@ uso: checar.py <post.md> [--carrossel | --artigo]
 Mostra o trecho que aparece antes do "…ver mais", as medidas comparadas com a voz e a lista de avisos.
 Não reescreve nada: quem decide é a pessoa (e o Claude, conversando com ela).
 """
-import sys, re, statistics
+import sys, re, statistics, json
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from comum import *
@@ -11,6 +11,12 @@ from comum import *
 OPOSICAO = re.compile(r"\bn[ãa]o (?:[ée]|se trata de|significa|basta)\b[^.!?\n]{0,60}?[,;—–-]\s*(?:mas |e sim |[ée] )", re.I)
 NAO_SEJA = re.compile(r"\bn[ãa]o (?:seja|ser[áa]|est[áa]|esteja|foi|era)\b[^.!?\n]{0,80}?,\s*mas\b", re.I)
 MAIS_DO_QUE = re.compile(r"\bmais do que [^.!?\n]{1,40}?, [ée]\b", re.I)
+# cacoetes que a PRÓPRIA skill tende a criar ao fugir dos clássicos de IA (em escala, viram assinatura reconhecível).
+# Se a expressão estiver em voz.md (é da pessoa), não vale o aviso.
+CACOETES_SKILL = ["repara que", "em que situação você já viu", "em que situação vocês já viram", "e aí vem o detalhe",
+                  "o detalhe que quase ninguém percebe", "e é aí que", "a pergunta que fica", "fica a pergunta",
+                  "o que fica é", "no fundo,", "e tudo bem", "spoiler", "vou te contar", "deixa eu te contar",
+                  "pois é", "simples assim", "faz sentido?", "parece óbvio, mas", "parece simples, mas"]
 CLICHES = ["vivemos em um mundo", "vivemos num mundo", "nunca foi tão importante", "na era digital", "o futuro já chegou",
            "fora da caixa", "novo paradigma", "cada vez mais", "nos dias de hoje", "precisamos refletir",
            "a transformação começa", "em um mundo cada vez", "no cenário atual", "não é de hoje"]
@@ -53,13 +59,44 @@ def paralelas(t):
     return achados
 
 
+def _pal(t):
+    return re.findall(r'[\wÀ-ú]+', t.lower())
+
+
+def repetidos(a, b, n=7):
+    """Primeira sequência de n palavras que aparece igual nos dois textos (repetir a si mesmo também é molde)."""
+    pa, pb = _pal(a), _pal(b)
+    gb = {tuple(pb[i:i + n]) for i in range(len(pb) - n + 1)}
+    for i in range(len(pa) - n + 1):
+        if tuple(pa[i:i + n]) in gb: return ' '.join(pa[i:i + n])
+    return ''
+
+
+def abertura(t, n=5):
+    return ' '.join(_pal(t)[:n])
+
+
+def anteriores_da_memoria(atual):
+    """Textos de posts/artigos já registrados (menos o atual), para não se repetir."""
+    hist = HIST
+    if not hist.exists(): return []
+    out = []
+    for l in open(hist, encoding='utf-8'):
+        i = json.loads(l)
+        for nome in ('post.md', 'artigo.md'):
+            f = Path(i.get('pasta') or '/nao/existe') / nome
+            if f.exists() and f.resolve().parent != Path(atual).resolve().parent:  # mesma pasta = mesmo conteúdo (post de divulgação do artigo)
+                out.append((f'{i["id"]}/{nome}', f.read_text(encoding='utf-8')))
+    return out
+
+
 def ver_mais(t, n=210):
     linhas = [l for l in t.strip().split('\n')]
     vis = '\n'.join(linhas[:3])
     return vis[:n] + ('…' if len(vis) > n or len(linhas) > 3 else '')
 
 
-def checar_texto(t, p, carrossel=False, artigo=False):
+def checar_texto(t, p, carrossel=False, artigo=False, ideia=None, anteriores=None):
     av = []  # (nivel, msg)  nivel: ERRO | ATENÇÃO | nota
     m = medir(t); v = p.get('voz_medidas') or {}
     n_op = len(OPOSICAO.findall(t)) + len(MAIS_DO_QUE.findall(t)) + len(NAO_SEJA.findall(t))
@@ -84,10 +121,31 @@ def checar_texto(t, p, carrossel=False, artigo=False):
         tam = [len(x.split()) for x in ps]
         if statistics.pstdev(tam) / max(1, statistics.mean(tam)) < 0.25:
             av.append(('ATENÇÃO', 'parágrafos todos do mesmo tamanho (molde visível). Varie.'))
+    voz_txt = VOZ.read_text(encoding='utf-8').lower() if VOZ.exists() else ''
+    cs = [x for x in achar(CACOETES_SKILL, t) if x not in voz_txt]
+    if cs: av.append(('ATENÇÃO', 'cacoete da própria skill (em escala vira assinatura): ' + ', '.join(f'"{x}"' for x in cs)))
+    if ideia is not None and not carrossel:
+        det = (ideia.get('detalhe_unico') or '').strip()
+        if not det:
+            av.append(('ATENÇÃO', 'ideia.json sem "detalhe_unico": falta o detalhe que só a pessoa sabe (estruturas.md).'))
+        else:
+            chave = [w for w in re.findall(r'[\wÀ-ú]{5,}', det.lower())]
+            achou = [w for w in chave if w in t.lower()]
+            if chave and len(achou) < max(1, len(chave) // 3):
+                av.append(('ATENÇÃO', f'o detalhe único ("{det[:60]}") não aparece no texto. É ele que diferencia o post.'))
+        if ideia.get('estrutura') and ideia['estrutura'] not in ESTRUTURAS:
+            av.append(('nota', f'estrutura "{ideia["estrutura"]}" fora do catálogo (estruturas.md).'))
+    for nome, ant in (anteriores or []):
+        rep = repetidos(t, ant)
+        if rep: av.append(('ATENÇÃO', f'repete trecho de "{nome}": "{rep}"'))
+        if abertura(t) and abertura(t) == abertura(ant):
+            av.append(('ATENÇÃO', f'mesma abertura de "{nome}".'))
     # voz
     if v:
         if m['palavras_por_frase'] > 1.35 * v['palavras_por_frase'] + 1:
             av.append(('ATENÇÃO', f'frases mais longas que a voz da pessoa ({m["palavras_por_frase"]} vs {v["palavras_por_frase"]} palavras): mais sofisticado do que a pessoa fala?'))
+        if v.get('variacao_frase') and m['frases'] >= 6 and m['variacao_frase'] < 0.6 * v['variacao_frase']:
+            av.append(('ATENÇÃO', f'ritmo monótono: frases todas parecidas em tamanho (variação {m["variacao_frase"]} vs {v["variacao_frase"]} da voz da pessoa).'))
         if v.get('emojis', 0) < 1 and m['emojis'] > 1:
             av.append(('ATENÇÃO', f'{m["emojis"]} emojis; a pessoa quase não usa.'))
         if not carrossel and not artigo and v.get('caracteres') and m['caracteres'] > 1.8 * v['caracteres']:
@@ -120,7 +178,9 @@ def checar_texto(t, p, carrossel=False, artigo=False):
 if __name__ == '__main__':
     if len(sys.argv) < 2: sys.exit(__doc__)
     t = Path(sys.argv[1]).read_text(encoding='utf-8'); p = carregar_perfil(obrigatorio=False)
-    m, av = checar_texto(t, p, '--carrossel' in sys.argv, '--artigo' in sys.argv)
+    fi = Path(sys.argv[1]).parent / 'ideia.json'
+    ideia = json.load(open(fi, encoding='utf-8')) if fi.exists() else None
+    m, av = checar_texto(t, p, '--carrossel' in sys.argv, '--artigo' in sys.argv, ideia, anteriores_da_memoria(sys.argv[1]))
     print('ANTES DO "…VER MAIS" (o que decide se abrem):\n' + '-' * 60 + '\n' + ver_mais(t) + '\n' + '-' * 60)
     v = p.get('voz_medidas') or {}
     print('\nmedidas (texto · voz da pessoa):')

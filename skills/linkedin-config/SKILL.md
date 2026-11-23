@@ -45,7 +45,10 @@ e deixe ela ajustar. Ex.: "erro comum que eu vejo", "bastidores do trabalho", "l
 - **Já publica:** peça 5 a 20 posts dela (colar aqui ou arquivo), separados por uma linha `---`. Salve em um arquivo
   e rode `$PY $N/tools/voz.py medir <arquivo>`. Depois leia os posts e escreva `~/.config/assistente-de-posicionamento/voz.md`:
   como ela abre, tamanho e ritmo das frases, vocabulário e expressões que usa, como fecha, o que ela **nunca** faz,
-  2–3 trechos curtos que são a cara dela (só trechos neutros, nunca nada pessoal ou de terceiros). Use também as quatro perguntas sobre um post antigo: por que publiquei,
+  2–3 trechos curtos que são a cara dela (só trechos neutros, nunca nada pessoal ou de terceiros).
+  `voz.py` lista **expressões que se repetem** entre os textos: confira quais são mesmo dela e copie-as **literalmente**
+  em `voz.md` (seção "Expressões dela"). É o que faz o texto dela soar diferente do de outras pessoas que usam a skill;
+  uma descrição genérica ("frases curtas, tom direto") serve para qualquer um. Use também as quatro perguntas sobre um post antigo: por que publiquei,
   o que queria provocar, o que aconteceu, o que faria diferente hoje.
 - **Ainda não publica:** peça 2–3 textos que ela escreveu **para outras pessoas lerem** (e-mail de trabalho, post em
   outra rede, artigo, mensagem longa explicando algo). Avise antes: nada de diário ou conversa íntima; se vier algo assim,
@@ -55,18 +58,25 @@ e deixe ela ajustar. Ex.: "erro comum que eu vejo", "bastidores do trabalho", "l
   ideias em `~/.config/assistente-de-posicionamento/notas.md` (seção "Banco de ideias").
 - Com menos de 5 textos, diga claramente que a voz ficará aproximada.
 
-## 5. Visual do carrossel
-Cores: hex, ou uma imagem dela (logo, banner, print do perfil) → `$PY $N/tools/cores.py <imagem>` sugere `fundo`,
-`texto`, `acento` e `suave`; **olhe a imagem** e ajuste a sugestão (cor pequena e marcante, como a de um destaque, às
-vezes some na contagem). Sem resposta: paleta padrão.
-Confira contraste texto/fundo. Fonte do título: `Inter` (padrão, limpa), `Playfair` (elegante, serifada) ou `Anton`
-(condensada, caixa alta). Foto: caminho de uma foto de rosto (opcional; sem foto, usa as iniciais).
-Pasta onde salvar os conteúdos (`pasta_saida`, padrão `~/Documents/LinkedIn`).
+## 5. Visual (carrossel e capa de artigo)
+Objetivo: que o visual dela não seja igual ao de todo mundo que usa a skill.
+- **Cores**, nunca a padrão sem escolher: uma imagem dela (logo, banner, print do perfil) → `$PY $N/tools/cores.py
+  <imagem>` sugere `fundo`, `texto`, `acento`, `suave`; **olhe a imagem** e ajuste (cor pequena e marcante, como a de
+  um destaque, às vezes some na contagem). Sem identidade visual: `$PY $N/tools/cores.py --curadas "<nome>"` dá 3
+  paletas; ofereça as 3. Grave com `"cores_escolhidas": true`.
+- **Família de layout** (`tema`): `editorial`, `minimal` (papel claro, leve), `impacto` (caixa alta, blocos de cor),
+  `classico` (papel, serifa, centralizado) ou `foto` (a foto dela ao fundo da capa). Grave as cores e rode
+  `$PY $N/tools/carrossel.py --temas ./familias.png`; mostre a imagem e deixe ela escolher.
+- **Fonte do título** (`fonte_titulo`): `Inter` (limpa), `SpaceGrotesk` (técnica), `ArchivoBlack` (pesada),
+  `Anton` (condensada, caixa alta), `Playfair` (elegante, serifada) ou `DMSerif` (editorial, serifada).
+- **Foto** (opcional, recomendada): foto de rosto. **Logo** (opcional): aparece na capa e no último slide.
+- Detalhes como o lado da faixa e o desenho de fundo variam sozinhos a partir do nome dela.
+- Pasta onde salvar os conteúdos (`pasta_saida`, padrão `~/Documents/LinkedIn`).
 
 ## 6. Gravar e mostrar
 `$PY $N/tools/perfil.py definir '<json>'` com tudo acima (chaves em `$N/tools/comum.py`, `PERFIL_PADRAO`).
 Depois `$PY $N/tools/carrossel.py --demo ./previa_carrossel.png` e **mostre a imagem**: "é assim que seus
-carrosséis vão ficar; quer mudar cor, fonte ou foto?". Precisa de Chrome/Edge/Brave instalado.
+carrosséis vão ficar; quer mudar cor, fonte, layout ou foto?". Precisa de Chrome/Edge/Brave instalado.
 Termine com `$PY $N/tools/perfil.py checar` e diga que, a partir de agora, é só pedir "post sobre…" ou
 "carrossel sobre…".
 

@@ -30,6 +30,20 @@ uma **ideia**, escolher a **intenção**, escrever com a **sua voz**, sem cara d
 - **Sigilo para conselheiros e administradores.** Alerta sobre deliberações, informação ainda não pública e casos que
   deixem deduzir a empresa. Para médicos, há também um módulo com as regras de publicidade do CFM.
 
+## Para não ficar igual a todo mundo
+Se mil pessoas usarem a mesma skill, o risco é tudo sair com a mesma cara. Por isso:
+- **Detalhe que só você sabe, obrigatório.** Todo conteúdo precisa de um: um lugar, um número da sua experiência, uma
+  frase que alguém disse, a decisão que você tomou. Sem ele, a skill não escreve.
+- **Onze estruturas de post** (cena, número, confissão, contraintuitivo, carta, diálogo, bastidor…), escolhidas pela
+  ideia e sem repetir as dos seus últimos posts. Nem todo post termina em pergunta.
+- **Suas expressões, literalmente.** A voz guarda as expressões que você realmente usa, não uma descrição genérica.
+- **A skill vigia os próprios cacoetes**, não só os clássicos de IA, e avisa quando você repete trechos ou aberturas
+  dos seus posts anteriores.
+- **Cinco famílias de layout**, seis fontes, seu logo, sua foto e variações que saem do seu nome. Nenhuma paleta
+  padrão: ou as cores da sua marca, ou uma escolhida por você.
+
+<p align="center"><img src="docs/familias-exemplo.png" width="720" alt="As cinco famílias de layout"></p>
+
 ## Veja um caso real
 [`exemplo/`](exemplo/) mostra um artigo escrito com IA e já editado pelo autor, que ainda tinha cara de IA: o que o
 verificador apontou e a versão final na voz dele.

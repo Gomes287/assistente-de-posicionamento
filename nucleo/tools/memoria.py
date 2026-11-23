@@ -158,7 +158,7 @@ if cmd == 'registrar':
         sys.exit('ideia.json sem "ideia" ou sem "intencao" válida (' + ', '.join(INTENCOES) + '). Preencha antes de registrar.')
     link = sys.argv[sys.argv.index('--link') + 1] if '--link' in sys.argv else ''
     it = {'id': P.name, 'pasta': str(P), 'data': hoje(), 'link': link,
-          **{k: ide.get(k, '') for k in ('titulo_trabalho', 'ideia', 'intencao', 'linha', 'formato', 'metrica_principal')},
+          **{k: ide.get(k, '') for k in ('titulo_trabalho', 'ideia', 'intencao', 'linha', 'formato', 'metrica_principal', 'estrutura')},
           'resultado': {}, 'aprendizado': ''}
     itens.append(it); gravar(itens); print('registrado:', it['id'], '·', it['intencao'], '·', it['linha'])
     if not link: print('sem link ainda: quando publicar, use memoria.py vincular', it['id'], '<URL>')
@@ -191,5 +191,8 @@ elif cmd == 'resumo':
     p = carregar_perfil(obrigatorio=False); nomes = [l['nome'] for l in p.get('linhas', [])]
     faltam = [x for x in nomes if x not in [i.get('linha') for i in itens[-6:]]]
     if faltam: print('linhas sem post nos últimos 6:', ', '.join(faltam))
+    usadas = [i.get('estrutura') for i in itens[-5:] if i.get('estrutura')]
+    if usadas:
+        print('estruturas dos últimos 5:', ', '.join(usadas), '→ prefira outra:', ', '.join(e for e in ESTRUTURAS if e not in usadas))
 else:
     print(__doc__)
