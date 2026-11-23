@@ -9,6 +9,19 @@
 3. Aceite quando o Claude pedir permissão. No fim aparece uma lista com ✔ (ok) e ✘ (o que falta, com a explicação).
 4. Comece uma conversa nova e diga: **"configurar meu assistente de posicionamento"**.
 
+## Antes de configurar, separe
+A configuração é uma conversa de uns 20 a 30 minutos, feita uma vez só. Ela fica melhor se você tiver à mão:
+- **Textos seus.** Se já publica no LinkedIn, de 5 a 20 posts antigos. Se não publica, 2 ou 3 textos que você
+  escreveu para outras pessoas lerem (e-mail de trabalho, post em outra rede, artigo). Nada de diário ou conversa
+  íntima. É deles que sai a sua voz.
+- **Logo ou print do banner** do seu LinkedIn, para as cores. Sem identidade visual, você escolhe entre três paletas.
+- **Uma foto de rosto**, para a capa dos carrosséis (opcional).
+- **Se for médico:** CRM, UF e RQE.
+
+Depois disso, é só pedir numa conversa nova: "quero um post sobre…", "não sei o que postar essa semana" ou
+"carrossel sobre…". De 2 a 7 dias depois de publicar, exporte a planilha em Análises de publicação → Exportar e
+entregue à skill para ver o resultado.
+
 Para atualizar, faça o mesmo com o zip novo. Seu perfil, sua voz e seu histórico não são apagados: ficam no seu
 computador, em `~/.config/assistente-de-posicionamento/`, e a skill nunca publica nada nem envia seus dados.
 
