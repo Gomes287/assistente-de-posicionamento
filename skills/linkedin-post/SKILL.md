@@ -55,6 +55,8 @@ Escreva `<pasta>/post.md` (só o texto do post, pronto para colar):
   fim (é onde mais aparece o molde). Varie o fim (`estruturas.md`, "Fins"). Pergunta só quando a intenção for `conversar`, e específica, com as
   palavras do assunto (não "em que situação você já viu isso?").
 - Use as expressões literais dela (`voz.md`), não as suas.
+- Prefira parágrafo a lista: ligue as ideias como ela falaria. Lista com marcador só para itens realmente
+  paralelos (passos, critérios), e no máximo uma por texto.
 - Hashtags: 0 a 3, se ela costuma usar.
 
 ## 3. Conferir

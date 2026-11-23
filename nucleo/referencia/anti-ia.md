@@ -26,7 +26,9 @@ detecta os que dá para detectar; os outros você confere lendo.
 - **Começos (ou finais) iguais em série:** "Não controlamos… Não controlamos…", "Se…, Se…, Se…", "Governos mudam.
   Regras mudam."
 - **Oposição dividida em duas frases** ("não é X. É Y.") e **"não apenas…, mas também…"**, "menos sobre X e mais sobre Y".
-- **Enumerações de 4+ itens** repetidas.
+- **Enumerações de 4+ itens** repetidas, e **listas com marcador** onde um parágrafo bastaria: enumerar tudo em
+  tópicos é uma das marcas mais fortes de texto gerado. Lista só quando os itens são mesmo paralelos e independentes
+  (passos, critérios); o resto vira parágrafo, com as ideias ligadas.
 - **Cautela em excesso** ("pode", "talvez" em quase toda frase).
 - **Intertítulos Em Maiúscula Em Cada Palavra** e **marcação em massa** de pessoas.
 - **O fim acumulando recursos de efeito.**

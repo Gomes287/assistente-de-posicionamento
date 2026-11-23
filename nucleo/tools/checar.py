@@ -78,6 +78,23 @@ def anaforas(t):
     return achados
 
 
+def listas(t):
+    """Blocos de itens com marcador (-, *, •, emoji, 1.) → [(n_itens, mediana de palavras por item)]."""
+    blocos, atual = [], []
+    for l in t.split('\n'):
+        s = l.strip()
+        if not s:
+            continue
+        m_ = re.match(r'^(?:[-*•▪◦▸►✓✔➡→]|\d{1,2}[.)]|' + EMOJI.pattern + r')\s*(.+)', s)
+        if m_:
+            atual.append(len(m_.group(1).split()))
+        else:
+            if len(atual) >= 3: blocos.append(atual)
+            atual = []
+    if len(atual) >= 3: blocos.append(atual)
+    return [(len(b), statistics.median(b)) for b in blocos]
+
+
 def titulos_ingles(t):
     """Intertítulos com Maiúscula Em Cada Palavra (padrão do inglês, comum em texto gerado ou traduzido)."""
     n = 0
@@ -180,6 +197,13 @@ def checar_texto(t, p, carrossel=False, artigo=False, ideia=None, anteriores=Non
     cautela = len(re.findall(r'\b(?:pode|podem|poderia|poderiam|talvez|possivelmente|eventualmente)\b', t, re.I))
     if m['palavras'] >= 150 and 100 * cautela / m['palavras'] > 1.3:
         av.append(('ATENÇÃO', f'cautela em excesso: {cautela}x "pode/talvez". Afirme o que você sustenta.'))
+    ls = listas(t)
+    if ls and not carrossel:
+        curtas = [b for b in ls if b[1] <= 20]
+        if len(ls) >= 2:
+            av.append(('ATENÇÃO', f'{len(ls)} listas com marcador: enumerar tudo é marca forte de texto gerado. Quantas dessas ideias cabem num parágrafo?'))
+        elif curtas:
+            av.append(('ATENÇÃO', f'lista de {curtas[0][0]} itens curtos que caberia num parágrafo: escreva como você falaria, ligando as ideias.'))
     if titulos_ingles(t) >= 2: av.append(('ATENÇÃO', 'intertítulos com Maiúscula Em Cada Palavra (padrão do inglês): em português, só a primeira.'))
     marc = len(re.findall(r'linkedin\.com/in/|(?<![\w.])@[\wÀ-ú]', t))
     if marc > 3: av.append(('ATENÇÃO', f'{marc} pessoas marcadas: marcação em massa é lida como tática de alcance. Marque só quem está no texto.'))

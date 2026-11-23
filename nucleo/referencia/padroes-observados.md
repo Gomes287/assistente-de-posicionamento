@@ -22,7 +22,8 @@ experiência importa para o seu público e para o que você faz. O texto ideal j
    também…".
 5. O fim acumulando recursos: aforismo em escada, "talvez seja menos sobre X e mais sobre Y", parágrafos espelhados.
 6. Cautela em excesso ("pode", "talvez" a cada frase).
-7. Emojis como marcadores, intertítulos Em Maiúscula Em Cada Palavra, marcação em massa de pessoas.
+7. Listas com marcador onde um parágrafo bastaria (enumerar tudo em tópicos).
+8. Emojis como marcadores, intertítulos Em Maiúscula Em Cada Palavra, marcação em massa de pessoas.
 
 Esses sintomas **não provam** autoria de IA: retórica de palestra e linguagem de coach têm os mesmos. O leitor, porém,
 reage igual. O verificador aponta; a pessoa decide.
