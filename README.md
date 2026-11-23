@@ -49,7 +49,7 @@ Se mil pessoas usarem a mesma skill, o risco é tudo sair com a mesma cara. Por 
 verificador apontou e a versão final na voz dele.
 
 ## Instalar
-Passo a passo para quem não é técnico: [docs/INSTALAR.md](docs/INSTALAR.md).
+Passo a passo para quem não é técnico: [docs/INSTALAR.md](docs/INSTALAR.md). Recebeu um zip? Veja o `LEIA-ME.md` dentro dele.
 
 Se você já usa o Claude Code no terminal:
 ```

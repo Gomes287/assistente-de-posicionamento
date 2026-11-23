@@ -22,6 +22,17 @@ Funciona no Mac. No Windows, use o caminho B (ainda não testado a fundo).
 
 Para atualizar depois, repita o passo 3.
 
+## Caminho com o zip (quando alguém te mandou o arquivo)
+1. Abra o app do Claude e vá na aba **Code** (ou use o Cowork).
+2. Arraste o zip `assistente-de-posicionamento-<versão>.zip` para a conversa, ou deixe ele na pasta Downloads, e envie:
+
+   > Instale o assistente de posicionamento deste zip: descompacte, leia o LEIA-ME.md e rode o instalador.
+
+3. Aceite quando o Claude pedir permissão e siga a partir do passo 4 do caminho A.
+
+Não precisa de internet nem de GitHub. Para atualizar, faça o mesmo com o zip novo: seus dados não são apagados.
+(Para quem distribui: `bash empacotar.sh` gera o zip na Área de Trabalho a partir do último commit.)
+
 ## Caminho B: se você já usa o Claude Code no terminal
 ```
 /plugin marketplace add Gomes287/assistente-de-posicionamento
