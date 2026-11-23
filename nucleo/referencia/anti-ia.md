@@ -16,6 +16,7 @@ detecta os que dá para detectar; os outros você confere lendo.
   "Deixe nos comentários". A pergunta final, se houver, é específica e só ela poderia fazer.
 - **Travessões em excesso** (—) e **emojis como marcadores** de lista.
 - **Tríades em série:** "X, Y e Z." repetido para dar ritmo.
+- **Frases paralelas em série:** "Planos mostram intenção. Recursos mostram possibilidade." (mesmo molde, frase atrás de frase).
 - **Parágrafos simétricos:** todos com o mesmo tamanho, como se saíssem do mesmo molde.
 - **Hashtags demais** (mais de 3–5).
 

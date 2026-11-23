@@ -1,9 +1,9 @@
-"""Peças comuns do assistente-linkedin: caminhos, perfil e medidas de texto. Só biblioteca padrão do Python."""
+"""Peças comuns do assistente-de-posicionamento: caminhos, perfil e medidas de texto. Só biblioteca padrão do Python."""
 import json, os, re, sys, statistics, datetime
 from pathlib import Path
 
 NUCLEO = Path(__file__).resolve().parent.parent
-CONF = Path(os.environ.get('ASSISTENTE_LINKEDIN_CONF', Path.home() / '.config/assistente-linkedin'))
+CONF = Path(os.environ.get('ASSISTENTE_POSICIONAMENTO_CONF', Path.home() / '.config/assistente-de-posicionamento'))
 PERFIL = CONF / 'perfil.json'
 VOZ = CONF / 'voz.md'
 NOTAS = CONF / 'notas.md'
@@ -21,6 +21,7 @@ PERFIL_PADRAO = {
     "conselho": "nenhum",                 # "CFM" liga o módulo de médicos; outro nome = só lembrete
     "identificacao": "",                  # linha do conselho, ex. "MÉDICO · CRM-SP 123456 · Cardiologia · RQE 9876"
     "identificacao_no_perfil": False,     # a identificação já está no título/Sobre do perfil do LinkedIn?
+    "sigilo": False,                      # conselheira/administradora com acesso a informação estratégica (módulo de sigilo)
     "situacao": "",                       # "ja_publica" | "nao_publica"
     "publico": "",
     "lembrado_por": "",                   # conhecimento | experiencia | visao | causa

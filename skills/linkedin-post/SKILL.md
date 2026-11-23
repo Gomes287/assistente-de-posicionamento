@@ -10,10 +10,10 @@ description: >-
 
 # Post de LinkedIn: da experiência à publicação
 
-`SK` = a pasta deste SKILL.md. `N="$SK/../../nucleo"` · `PY=python3`.
+`SK` = a pasta deste SKILL.md. `N=$(cd -P "$SK/../../nucleo" && pwd)` · `PY=python3`.
 Antes de tudo: `$PY $N/tools/perfil.py checar` (se faltar perfil, use a skill **linkedin-config**). Leia
-`~/.config/assistente-linkedin/voz.md`, `~/.config/assistente-linkedin/notas.md` (regras dela, valem acima destas) e
-`$N/referencia/autoria.md`, `anti-ia.md`, `intencao.md`, `formato.md`. Se `conselho` = CFM: `conselhos/cfm.md`.
+`~/.config/assistente-de-posicionamento/voz.md`, `~/.config/assistente-de-posicionamento/notas.md` (regras dela, valem acima destas) e
+`$N/referencia/autoria.md`, `anti-ia.md`, `intencao.md`, `formato.md`. Se `conselho` = CFM: `conselhos/cfm.md`. Se `sigilo` = true: `conselhos/sigilo.md` (sempre).
 `$PY $N/tools/memoria.py resumo` mostra o que já foi publicado (não repita ideia; veja que linha está sem post).
 
 ## 1. Entrevista (antes de escrever qualquer coisa)
@@ -54,7 +54,7 @@ Depois de publicar: `$PY $N/tools/memoria.py registrar <pasta> --link <url>`.
 
 ## Artigo (texto longo do LinkedIn)
 Quando a ideia pede mais que um post (argumento com fonte, várias etapas, texto acima de ~3.000 caracteres), ou a
-pessoa trouxer um artigo pronto: mesma entrevista, mesmas regras, e `checar.py` em `<pasta>/artigo.md`. Um artigo
+pessoa trouxer um artigo pronto: mesma entrevista, mesmas regras, e `checar.py <pasta>/artigo.md --artigo` (sem o limite de 3.000 caracteres do post). Um artigo
 precisa de três coisas além do texto:
 1. **Título do artigo** (até ~100 caracteres): claro, com a ideia ou a pergunta central e as palavras que o público
    buscaria. Proponha 3 opções com pesos diferentes (mais direto, mais pergunta, mais provocativo) e deixe ela escolher.

@@ -3,7 +3,7 @@ uso:
   perfil.py mostrar                      mostra o perfil e o que falta
   perfil.py definir '<json parcial>'     junta no perfil
   perfil.py checar                       sai com erro se faltar algo essencial
-Arquivos: ~/.config/assistente-linkedin/ (perfil.json, voz.md, notas.md, historico.jsonl, exemplos/).
+Arquivos: ~/.config/assistente-de-posicionamento/ (perfil.json, voz.md, notas.md, historico.jsonl, exemplos/).
 """
 import sys, json
 from pathlib import Path

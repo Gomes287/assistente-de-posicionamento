@@ -7,7 +7,7 @@ uso:
                        [salvamentos=N seguidores=N visitas_perfil=N]      (à mão, se não houver planilha)
   memoria.py aprendizado <pasta|id> "o que levar para a próxima decisão"
   memoria.py resumo [N]                               últimos N conteúdos, equilíbrio das linhas, aprendizados
-Arquivos: ~/.config/assistente-linkedin/historico.jsonl (um conteúdo por linha) e conta.jsonl (fotos da conta).
+Arquivos: ~/.config/assistente-de-posicionamento/historico.jsonl (um conteúdo por linha) e conta.jsonl (fotos da conta).
 """
 import sys, json, statistics, re, unicodedata, urllib.parse
 from pathlib import Path

@@ -10,4 +10,4 @@ Vale sempre, com ou sem conselho profissional:
 Profissões com regras próprias de publicidade (OAB para advogados, CRP para psicólogos, CVM/Anbima para quem fala de
 investimentos, CFO, CRMV etc.): a skill ainda não tem módulo para elas. Na configuração, avise a pessoa de que ela
 continua responsável por essas regras e anote em `perfil.conselho` o nome do conselho para lembrar nos avisos.
-Hoje o módulo pronto é o do CFM (`cfm.md`).
+Módulos prontos: sigilo de conselheiros e administradores (`sigilo.md`) e CFM para médicos (`cfm.md`).

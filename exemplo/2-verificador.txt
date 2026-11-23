@@ -1,0 +1,20 @@
+ANTES DO "…VER MAIS" (o que decide se abrem):
+------------------------------------------------------------
+# Resiliência não se mede apenas pela preparação
+
+É possivel para qualquer serviço de saúde ter um plano de contingencia, ter uma equipe de resposta, ter estoque de emergencia e até um colchão enorme de recurso…
+------------------------------------------------------------
+
+medidas (texto · voz da pessoa):
+  caracteres                    3041 · 1453
+  palavras_por_frase            16.3 · 12.2
+  paragrafos                      10 · 6
+  primeira_pessoa_por_100        1.9 · 4.8
+  emojis                           0 · 0
+  hashtags                         0 · 0
+  perguntas                        1 · 1
+  travessoes_por_1000            2.1 · 0.0
+
+ATENÇÃO  transição mecânica: "nesse sentido"
+ATENÇÃO  frases paralelas em série (molde de IA): "Planos mostram intenção. Recursos mostram possibilidade."
+nota     uma oposição "não é X, é Y": ok se for a ideia central; não repita.

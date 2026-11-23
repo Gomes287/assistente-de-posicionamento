@@ -10,10 +10,10 @@ description: >-
 
 # Carrossel de LinkedIn
 
-`SK` = a pasta deste SKILL.md. `N="$SK/../../nucleo"` · `PY=python3`. Precisa de Chrome, Edge, Brave ou Chromium.
+`SK` = a pasta deste SKILL.md. `N=$(cd -P "$SK/../../nucleo" && pwd)` · `PY=python3`. Precisa de Chrome, Edge, Brave ou Chromium.
 Antes: `$PY $N/tools/perfil.py checar` (sem perfil → **linkedin-config**). Leia `voz.md`, `notas.md`
-(em `~/.config/assistente-linkedin/`), e `$N/referencia/autoria.md`, `anti-ia.md`, `intencao.md`, `formato.md`
-(+ `conselhos/cfm.md` se CFM).
+(em `~/.config/assistente-de-posicionamento/`), e `$N/referencia/autoria.md`, `anti-ia.md`, `intencao.md`, `formato.md`
+(+ `conselhos/cfm.md` se CFM, `conselhos/sigilo.md` se `sigilo`).
 
 ## 1. Ideia antes de slide
 Faça a entrevista do **linkedin-post**, passo 1 (experiência, ideia em uma frase, ponto de vista, para quem, intenção).

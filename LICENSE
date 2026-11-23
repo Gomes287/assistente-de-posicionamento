@@ -22,4 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ---
-Not covered by this license: nucleo/fontes/ (SIL Open Font License 1.1, see the .LICENSE.txt next to each font).
+Not covered by this license:
+- nucleo/fontes/: SIL Open Font License 1.1, see the .LICENSE.txt next to each font.
+- exemplo/: content, image and name of Pedro Gomes, shown with permission. All rights reserved.
