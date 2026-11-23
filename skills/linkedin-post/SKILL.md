@@ -64,11 +64,19 @@ precisa de três coisas além do texto:
    e o convite para ler, conferido com `checar.py`.
 Referências do artigo vão no fim do texto, com link quando houver.
 
-## 5. Resultado (quando ela trouxer os números, ~48 h ou 7 dias depois)
-`$PY $N/tools/memoria.py resultado <pasta> impressoes=… reacoes=… comentarios=… compartilhamentos=… [salvamentos=…
-seguidores=… visitas_perfil=…]`. Leia o resultado **contra a intenção** (métrica sem objetivo é só número), sem
-desanimar com números baixos no começo. Pergunte o que ela leva para a próxima decisão e grave com
-`memoria.py aprendizado`.
+## 5. Resultado (2 a 7 dias depois)
+Jeito recomendado: no LinkedIn, **Análises de publicação → Exportar** (planilha .xlsx). A pessoa entrega o arquivo e
+você roda `$PY $N/tools/memoria.py importar <arquivo.xlsx>`: ele acha cada post pelo link, preenche os números, guarda
+uma foto da conta (seguidores, alcance, quem viu o conteúdo) e importa também os posts feitos fora da skill.
+- Post registrado sem link → peça o link e `memoria.py vincular <id> <URL>`, depois importe de novo.
+- Posts importados sem intenção → pergunte a intenção de cada um (`memoria.py intencao <id> <intencao> [linha]`):
+  sem isso, a comparação por intenção não funciona.
+- Compare "quem viu o conteúdo" com o público do perfil: está chegando em quem ela quer?
+Sem planilha: `memoria.py resultado <pasta> impressoes=… reacoes=… comentarios=… compartilhamentos=…`.
+**Não** abra o painel do LinkedIn pelo navegador para ler os números: os termos do LinkedIn proíbem acesso
+automatizado e a conta da pessoa pode ser restringida. A exportação é oficial e não tem esse risco.
+Leia o resultado **contra a intenção** (métrica sem objetivo é só número), sem desanimar com números baixos no
+começo. Pergunte o que ela leva para a próxima decisão e grave com `memoria.py aprendizado`.
 
 ## Comentários em posts de outras pessoas
 Comentar no nicho costuma render alcance, mas a skill **não escreve comentários** (`autoria.md`). Se ela pedir, ajude

@@ -16,7 +16,8 @@ voz**, sem cara de IA, e aprender com os números do que você publicou.
 - **Regras de autoria.** Nenhuma opinião que você não deu, nenhuma experiência inventada, e um aviso quando o texto
   não tem nada seu. A skill não escreve comentários e não publica nada.
 - **Carrossel em PDF** (1080×1350) com suas cores, fonte, foto e identificação, pronto para subir como documento.
-- **Memória editorial.** Registra o que foi publicado, com que intenção, os números e o que você aprendeu. O resultado
+- **Memória editorial.** Registra o que foi publicado, com que intenção, os números (lidos da planilha que o próprio
+  LinkedIn exporta, sem digitar nada) e o que você aprendeu. O resultado
   é lido contra a intenção, porque métrica sem objetivo é só número.
 - **Módulo CFM para médicos.** Confere a identificação, promessa de resultado, autopromoção, sensacionalismo e oferta
   de consulta (Res. CFM 2.336/2023 e 2.454/2026).
