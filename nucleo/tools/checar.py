@@ -1,6 +1,9 @@
 """Confere um texto antes de entregar: cacoetes de IA, voz da pessoa, formato do LinkedIn e regras do conselho.
-uso: checar.py <post.md> [--carrossel | --artigo]
-Mostra o trecho que aparece antes do "…ver mais", as medidas comparadas com a voz e a lista de avisos.
+uso: checar.py <post.md> [--carrossel | --artigo] [--html]
+Mostra o trecho que aparece antes do "…ver mais", as medidas comparadas com a voz, a lista de avisos e o TEXTO MARCADO:
+cada trecho suspeito entre ** ** com o número do motivo (mostrar no texto ajuda a pessoa a ver o padrão; no GLTR,
+de Gehrmann et al. 2019, a marcação no texto levou leitores de 54% para 72% de acerto). Com --html grava também
+revisao.html na pasta do texto, com os trechos coloridos e o motivo ao passar o mouse.
 Não reescreve nada: quem decide é a pessoa (e o Claude, conversando com ela).
 """
 import sys, re, statistics, json
@@ -58,7 +61,7 @@ def achar_radical(lista, t):
     return sorted({m.group(0) for x in lista for m in re.finditer(r'\b' + re.escape(x) + r'[\wÀ-ú]*', tl)})
 
 
-def anaforas(t):
+def anaforas(t, frases_out=None):
     """3+ frases seguidas (de qualquer tamanho) começando pela mesma palavra: "Não controlamos… Não controlamos…",
     "Se…, Se…, Se…", "Será que…? Será que…?". E frases curtas seguidas terminando igual ("Governos mudam. Regras mudam.")."""
     fs = [f for p in paragrafos(t) for f in frases(p)]
@@ -68,13 +71,16 @@ def anaforas(t):
         if w[i] and w[i][0] not in ('o', 'a', 'os', 'as', 'e', 'de', 'em', 'um', 'uma') and all(w[k] and w[k][0] == w[i][0] for k in (i + 1, i + 2)):
             j = i + 3
             while j < len(w) and w[j] and w[j][0] == w[i][0]: j += 1
-            achados.append(f'{j - i}x "{w[i][0].capitalize()}…"'); i = j
+            achados.append(f'{j - i}x "{w[i][0].capitalize()}…"')
+            if frases_out is not None: frases_out.extend(fs[i:j])
+            i = j
         else:
             i += 1
     for i in range(len(w) - 1):
         a, b = w[i], w[i + 1]
         if 2 <= len(a) <= 4 and 2 <= len(b) <= 4 and a[-1] == b[-1] and len(a[-1]) > 3:
             achados.append(f'"{fs[i]} {fs[i + 1]}"')
+            if frases_out is not None: frases_out.extend(fs[i:i + 2])
     return achados
 
 
@@ -167,43 +173,100 @@ def anteriores_da_memoria(atual):
     return out
 
 
+def _rx_trecho(s):
+    """Regex que acha um trecho no texto original mesmo se as quebras de linha mudaram."""
+    return r'\s+'.join(re.escape(x) for x in s.split())
+
+
+def _marcar(marcas, t, padrao, motivo, flags=re.I | re.M):
+    if marcas is None: return
+    for mm in re.finditer(padrao, t, flags):
+        if mm.end() > mm.start(): marcas.append((mm.start(), mm.end(), motivo))
+
+
+def texto_marcado(t, marcas):
+    """Texto com cada trecho marcado entre ** ** e o número do motivo; devolve (texto, [motivos])."""
+    motivos, ult, out, fim = [], {}, [], 0
+    for a, b, mot in sorted(marcas, key=lambda x: (x[0], -(x[1] - x[0]))):
+        if a < fim: continue                      # sobreposto a um trecho já marcado
+        if mot not in ult: motivos.append(mot); ult[mot] = len(motivos)
+        seg = t[a:b].strip(); a2 = a + t[a:b].index(seg[:1]) if seg else a
+        out.append(t[fim:a2]); out.append(f'**{seg}**[{ult[mot]}]'); fim = a2 + len(seg)
+    out.append(t[fim:])
+    return ''.join(out), motivos
+
+
+def revisao_html(t, marcas, destino):
+    import html as H
+    motivos, ult, out, fim = [], {}, [], 0
+    for a, b, mot in sorted(marcas, key=lambda x: (x[0], -(x[1] - x[0]))):
+        if a < fim: continue
+        if mot not in ult: motivos.append(mot); ult[mot] = len(motivos)
+        out.append(H.escape(t[fim:a]))
+        out.append(f'<mark title="{H.escape(mot)}">{H.escape(t[a:b])}<sup>{ult[mot]}</sup></mark>'); fim = b
+    out.append(H.escape(t[fim:]))
+    lis = ''.join(f'<li>{H.escape(m)}</li>' for m in motivos)
+    destino.write_text(f'''<!doctype html><meta charset="utf-8"><title>Revisão</title>
+<style>body{{font:18px/1.6 -apple-system,system-ui,sans-serif;max-width:1100px;margin:40px auto;padding:0 16px;color:#1d2329;background:#fbfaf7}}
+.g{{display:grid;grid-template-columns:1fr 340px;gap:40px}}@media(max-width:800px){{.g{{display:block}}}}
+.t{{white-space:pre-wrap}}mark{{background:#f6dc8a;border-radius:3px;padding:0 2px}}sup{{color:#8c6118;font-weight:700;margin-left:2px}}
+ol{{font-size:15px;line-height:1.45;color:#3c464f}}li{{margin-bottom:10px}}h1{{font-size:22px}}</style>
+<h1>Revisão: trechos para você olhar de novo</h1><p style="color:#5b6670;font-size:15px">Marcar não é acusar: cada trecho
+é um padrão que leitores associam a texto genérico. Você decide se fica.</p>
+<div class="g"><div class="t">{''.join(out)}</div><ol>{lis}</ol></div>''', encoding='utf-8')
+
+
 def ver_mais(t, n=210):
     linhas = [l for l in t.strip().split('\n')]
     vis = '\n'.join(linhas[:3])
     return vis[:n] + ('…' if len(vis) > n or len(linhas) > 3 else '')
 
 
-def checar_texto(t, p, carrossel=False, artigo=False, ideia=None, anteriores=None):
+def checar_texto(t, p, carrossel=False, artigo=False, ideia=None, anteriores=None, marcas=None):
+    """marcas: se for uma lista, recebe (início, fim, motivo) de cada trecho suspeito, para mostrar no texto."""
     av = []  # (nivel, msg)  nivel: ERRO | ATENÇÃO | nota
+    mk = lambda padrao, motivo: _marcar(marcas, t, padrao, motivo)
     m = medir(t); v = p.get('voz_medidas') or {}
     n_op = (len(OPOSICAO.findall(t)) + len(MAIS_DO_QUE.findall(t)) + len(NAO_SEJA.findall(t))
             + len(NAO_APENAS.findall(t)) + len(OPOSICAO_2.findall(t)) + len(MENOS_MAIS.findall(t)))
+    if n_op:
+        for r in (OPOSICAO, MAIS_DO_QUE, NAO_SEJA, NAO_APENAS, OPOSICAO_2, MENOS_MAIS): mk(r.pattern, 'oposição "não é X, é Y"')
     if n_op >= 2: av.append(('ATENÇÃO', f'oposição "não é X, é Y" {n_op}x: cacoete de IA. Deixe no máximo uma.'))
     elif n_op == 1: av.append(('nota', 'uma oposição "não é X, é Y": ok se for a ideia central; não repita.'))
     for nome, lista in (('clichê', CLICHES), ('transição mecânica', TRANSICOES)):
         a = achar(lista, t)
         if a: av.append(('ATENÇÃO', f'{nome}: ' + ', '.join(f'"{x}"' for x in a)))
+        for x in a: mk(re.escape(x), nome)
     a = achar_radical(VOCAB_IA, t)
     if a: av.append(('ATENÇÃO', 'vocabulário de IA: ' + ', '.join(f'"{x}"' for x in a)))
-    an = anaforas(t)
+    for x in a: mk(r'\b' + re.escape(x) + r'\b', 'vocabulário de IA')
+    fs_an = []; an = anaforas(t, fs_an)
+    for f in fs_an: mk(_rx_trecho(f), 'frases começando ou terminando igual em série')
     if an: av.append(('ATENÇÃO', 'frases começando ou terminando do mesmo jeito em série: ' + '; '.join(an[:3])))
     tri_longa = len(re.findall(r'(?:[\wÀ-ú]+ ){0,4}[\wÀ-ú]+, (?:[\wÀ-ú]+ ){0,4}[\wÀ-ú]+,? e (?:[\wÀ-ú]+ ){0,4}[\wÀ-ú]+[.!;:?]', t))
     enum = len(re.findall(r'(?:[\wÀ-ú]+(?: [\wÀ-ú]+){0,4}, ){3,}(?:[\wÀ-ú]+ ){0,4}[\wÀ-ú]+,? e ', t))
-    if enum >= 2: av.append(('ATENÇÃO', f'{enum} enumerações de 4+ itens: escolha os que importam.'))
+    if enum >= 2:
+        av.append(('ATENÇÃO', f'{enum} enumerações de 4+ itens: escolha os que importam.'))
+        mk(r'(?:[\wÀ-ú]+(?: [\wÀ-ú]+){0,4}, ){3,}(?:[\wÀ-ú]+ ){0,4}[\wÀ-ú]+,? e (?:[\wÀ-ú]+ ){0,4}[\wÀ-ú]+', 'enumeração longa')
     anun = achar(ANUNCIOS, t); dois_pontos = len(re.findall(r'[^\n]{8,}:\s*$', t, re.M))
     if len(anun) >= 2 or dois_pontos >= 3:
         av.append(('ATENÇÃO', 'frases que anunciam o próximo parágrafo em vez de dizer a coisa' +
                    (': ' + ', '.join(f'"{x}"' for x in anun) if anun else '') + (f' ({dois_pontos} linhas terminando em ":")' if dois_pontos >= 3 else '')))
+        for x in anun: mk(re.escape(x), 'frase que anuncia em vez de dizer')
+        if dois_pontos >= 3: mk(r'[^\n]{8,}:[ \t]*$', 'linha que anuncia o que vem')
     cautela = len(re.findall(r'\b(?:pode|podem|poderia|poderiam|talvez|possivelmente|eventualmente)\b', t, re.I))
     if m['palavras'] >= 150 and 100 * cautela / m['palavras'] > 1.3:
         av.append(('ATENÇÃO', f'cautela em excesso: {cautela}x "pode/talvez". Afirme o que você sustenta.'))
+        mk(r'\b(?:pode|podem|poderia|poderiam|talvez|possivelmente|eventualmente)\b', 'cautela em excesso')
     ls = listas(t)
     if ls and not carrossel:
         curtas = [b for b in ls if b[1] <= 20]
         if len(ls) >= 2:
             av.append(('ATENÇÃO', f'{len(ls)} listas com marcador: enumerar tudo é marca forte de texto gerado. Quantas dessas ideias cabem num parágrafo?'))
+            mk(r'^[ \t]*(?:[-*•▪◦▸►✓✔➡→]|\d{1,2}[.)])[ \t]+.+$', 'lista que caberia num parágrafo')
         elif curtas:
             av.append(('ATENÇÃO', f'lista de {curtas[0][0]} itens curtos que caberia num parágrafo: escreva como você falaria, ligando as ideias.'))
+            mk(r'^[ \t]*(?:[-*•▪◦▸►✓✔➡→]|\d{1,2}[.)])[ \t]+.+$', 'lista que caberia num parágrafo')
     if titulos_ingles(t) >= 2: av.append(('ATENÇÃO', 'intertítulos com Maiúscula Em Cada Palavra (padrão do inglês): em português, só a primeira.'))
     marc = len(re.findall(r'linkedin\.com/in/|(?<![\w.])@[\wÀ-ú]', t))
     if marc > 3: av.append(('ATENÇÃO', f'{marc} pessoas marcadas: marcação em massa é lida como tática de alcance. Marque só quem está no texto.'))
@@ -219,13 +282,18 @@ def checar_texto(t, p, carrossel=False, artigo=False, ideia=None, anteriores=Non
         mf, mi = marcadores_de_efeito(fim), marcadores_de_efeito(ini)
         if mf >= 2 and mf > mi / 3:
             av.append(('ATENÇÃO', f'o fim acumula recursos de efeito ({mf} no último quarto): termine onde a ideia acaba, sem aforismo em cascata.'))
+            mk(_rx_trecho(fs_all[corte]) + r'[\s\S]*\Z', 'fim acumulando frases de efeito')
+    for r in ABERTURAS + FECHOS: mk(r, 'abertura ou fecho genérico')
     if any(re.search(r, t, re.I) for r in ABERTURAS): av.append(('ATENÇÃO', 'abertura genérica ("você já parou para pensar"/"imagine"). Abra com a cena ou observação concreta.'))
     if any(re.search(r, t.strip(), re.I | re.M) for r in FECHOS): av.append(('ATENÇÃO', 'fecho genérico ("e você, o que acha?"/"concorda?"). Pergunta específica, que só a pessoa faria.'))
     triades = len(re.findall(r'\b[\wÀ-ú]+(?: [\wÀ-ú]+)?, [\wÀ-ú]+(?: [\wÀ-ú]+)? e [\wÀ-ú]+(?: [\wÀ-ú]+)?[.!]', t))
     if triades < 2 and tri_longa >= 3: triades = tri_longa
-    if triades >= 2: av.append(('ATENÇÃO', f'{triades} tríades "X, Y e Z." para dar ritmo: cacoete de IA.'))
+    if triades >= 2:
+        av.append(('ATENÇÃO', f'{triades} tríades "X, Y e Z." para dar ritmo: cacoete de IA.'))
+        mk(r'\b[\wÀ-ú]+(?: [\wÀ-ú]+)?, [\wÀ-ú]+(?: [\wÀ-ú]+)? e [\wÀ-ú]+(?: [\wÀ-ú]+)?[.!]', 'tríade "X, Y e Z."')
     par = paralelas(t)
     if par: av.append(('ATENÇÃO', 'frases paralelas em série (molde de IA): ' + ' | '.join(f'"{x}"' for x in par[:2])))
+    for x in par: mk(_rx_trecho(x), 'frases paralelas em série')
     emo_lista = len(re.findall(r'^\s*' + EMOJI.pattern, t, re.M))
     if emo_lista >= 2: av.append(('ATENÇÃO', f'{emo_lista} linhas começando com emoji (lista com emoji é marca de IA).'))
     lim_trav = max(3.0, 2 * v.get('travessoes_por_1000', 0))
@@ -239,6 +307,7 @@ def checar_texto(t, p, carrossel=False, artigo=False, ideia=None, anteriores=Non
     voz_txt = VOZ.read_text(encoding='utf-8').lower() if VOZ.exists() else ''
     cs = [x for x in achar(CACOETES_SKILL, t) if x not in voz_txt]
     if cs: av.append(('ATENÇÃO', 'cacoete da própria skill (em escala vira assinatura): ' + ', '.join(f'"{x}"' for x in cs)))
+    for x in cs: mk(re.escape(x), 'cacoete da própria skill')
     if ideia is not None and not carrossel:
         det = (ideia.get('detalhe_unico') or '').strip()
         if not det:
@@ -267,6 +336,19 @@ def checar_texto(t, p, carrossel=False, artigo=False, ideia=None, anteriores=Non
             av.append(('ATENÇÃO', f'{m["emojis"]} emojis; a pessoa quase não usa.'))
         if not carrossel and not artigo and v.get('caracteres') and m['caracteres'] > 1.8 * v['caracteres']:
             av.append(('nota', f'bem mais longo que os posts da pessoa ({m["caracteres"]} vs ~{int(v["caracteres"])} caracteres).'))
+        # medidas da literatura de detecção (Wu et al., 2025): texto gerado usa mais voz passiva, menos pontuação
+        # expressiva e um vocabulário diferente do da pessoa. Só comparadas com a voz dela, nunca com número fixo.
+        vm, mm_ = v.get('vocabulario_mtld'), m['vocabulario_mtld']
+        if vm and mm_:
+            if mm_ > 1.4 * vm:
+                av.append(('ATENÇÃO', f'vocabulário bem mais rebuscado que o seu (diversidade {mm_} vs {vm} nos seus textos): troque as palavras que você não usaria.'))
+            elif mm_ < 0.65 * vm:
+                av.append(('ATENÇÃO', f'vocabulário mais repetitivo que o seu (diversidade {mm_} vs {vm}): as mesmas palavras voltando, como em texto gerado.'))
+        if 'passiva_por_1000' in v and m['passiva_por_1000'] > 2 * v['passiva_por_1000'] + 3 and len(PASSIVA.findall(t)) >= 3:
+            av.append(('ATENÇÃO', f'voz passiva acima da sua ({m["passiva_por_1000"]} vs {v["passiva_por_1000"]} por mil palavras): quem decidiu, quem fez? Diga o sujeito.'))
+            mk(PASSIVA.pattern, 'voz passiva: diga quem fez')
+        if v.get('pontuacao_expressiva_por_1000', 0) >= 6 and m['palavras'] >= 120 and m['pontuacao_expressiva_por_1000'] < 0.35 * v['pontuacao_expressiva_por_1000']:
+            av.append(('nota', f'pontuação mais "limpa" que a sua ({m["pontuacao_expressiva_por_1000"]} vs {v["pontuacao_expressiva_por_1000"]} por mil palavras de ?, !, parênteses e reticências): você costuma perguntar e comentar entre parênteses.'))
     if m['primeira_pessoa_por_100'] < 0.5 and not carrossel:
         av.append(('ATENÇÃO', 'quase nada em primeira pessoa: onde está a experiência da pessoa? (autoria, regra 4)'))
     # formato
@@ -279,10 +361,12 @@ def checar_texto(t, p, carrossel=False, artigo=False, ideia=None, anteriores=Non
         for nome, r in CFM_RISCO.items():
             a = sorted(set(y for x in re.findall(r, t, re.I) for y in ((x,) if isinstance(x, str) else x) if y))
             if a: av.append(('ATENÇÃO', f'CFM, {nome}: ' + ', '.join(f'"{x}"' for x in a) + ' (referencia/conselhos/cfm.md)'))
+            if a: mk(r, f'CFM: {nome}')
         if not p.get('identificacao_no_perfil') and not carrossel:
             av.append(('ATENÇÃO', 'CFM Art. 4º/6º: confirme que nome, MÉDICO, CRM/UF e RQE estão no título ou Sobre do perfil.'))
     if p.get('sigilo'):
         a = sorted(set(x.lower() for x in re.findall(SIGILO_RISCO, t, re.I)))
+        if a: mk(SIGILO_RISCO, 'sigilo: dá para deduzir a empresa?')
         if a: av.append(('ATENÇÃO', 'sigilo de conselho/administração: ' + ', '.join(f'"{x}"' for x in a) +
                          '. Dá para deduzir a empresa? A informação já é pública? (referencia/conselhos/sigilo.md)'))
     if p.get('conselho') == 'CFM':
@@ -297,15 +381,23 @@ if __name__ == '__main__':
     t = Path(sys.argv[1]).read_text(encoding='utf-8'); p = carregar_perfil(obrigatorio=False)
     fi = Path(sys.argv[1]).parent / 'ideia.json'
     ideia = json.load(open(fi, encoding='utf-8')) if fi.exists() else None
-    m, av = checar_texto(t, p, '--carrossel' in sys.argv, '--artigo' in sys.argv, ideia, anteriores_da_memoria(sys.argv[1]))
+    marcas = []
+    m, av = checar_texto(t, p, '--carrossel' in sys.argv, '--artigo' in sys.argv, ideia, anteriores_da_memoria(sys.argv[1]), marcas)
     print('ANTES DO "…VER MAIS" (o que decide se abrem):\n' + '-' * 60 + '\n' + ver_mais(t) + '\n' + '-' * 60)
     v = p.get('voz_medidas') or {}
     print('\nmedidas (texto · voz da pessoa):')
-    for k in ('caracteres', 'palavras_por_frase', 'paragrafos', 'primeira_pessoa_por_100', 'emojis', 'hashtags', 'perguntas', 'travessoes_por_1000'):
+    for k in ('caracteres', 'palavras_por_frase', 'paragrafos', 'primeira_pessoa_por_100', 'emojis', 'hashtags', 'perguntas',
+              'travessoes_por_1000', 'vocabulario_mtld', 'passiva_por_1000', 'pontuacao_expressiva_por_1000'):
         print(f'  {k:26} {m[k]!s:>7} · {v.get(k, "-")}')
     print()
     for n, msg in sorted(av, key=lambda x: ['ERRO', 'ATENÇÃO', 'nota'].index(x[0])):
         print(f'{n:8} {msg}')
     if not [a for a in av if a[0] != 'nota']:
         print('OK: nenhum cacoete detectado. Agora leia em voz alta: soa como ela?')
+    if marcas:
+        tm, motivos = texto_marcado(t, marcas)
+        print('\nTEXTO MARCADO (mostre assim à pessoa: o trecho em negrito e o número do motivo):\n' + '-' * 60 + '\n' + tm.strip() + '\n' + '-' * 60)
+        for i, mot in enumerate(motivos, 1): print(f'  [{i}] {mot}')
+        if '--html' in sys.argv:
+            dst = Path(sys.argv[1]).parent / 'revisao.html'; revisao_html(t, marcas, dst); print(f'\nrevisão colorida: {dst}')
     sys.exit(1 if any(a[0] == 'ERRO' for a in av) else 0)

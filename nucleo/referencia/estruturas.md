@@ -28,3 +28,10 @@ Todo conteúdo precisa de pelo menos um detalhe concreto que só a pessoa conhec
 experiência, uma frase que alguém disse, a decisão que ela tomou, o que ela sentiu. Grave em `ideia.json` →
 `"detalhe_unico"`. Sem ele, não escreva: é o que torna o post impossível de confundir com o de outra pessoa.
 `checar.py` confere se o detalhe aparece no texto.
+
+**A palavra que o modelo não previa.** Texto humano usa 2,4 vezes mais palavras fora das cem que um modelo de
+linguagem esperaria naquele ponto (GLTR, Gehrmann et al. 2019); o texto gerado escolhe sempre a palavra mais provável.
+Ao escrever, confira cada parágrafo: tem pelo menos uma palavra, número, nome ou expressão dela que você (o modelo)
+**não** teria escolhido sozinho? Se o parágrafo inteiro é o que você escreveria para qualquer pessoa, troque uma
+abstração pelo concreto que ela contou ("um colchão enorme de recursos", "o painel da UTI"), ou corte o parágrafo.
+Não invente esse detalhe: se não houver, pergunte a ela.

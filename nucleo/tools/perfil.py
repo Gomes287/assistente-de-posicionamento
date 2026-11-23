@@ -43,6 +43,10 @@ elif cmd == 'definir':
 elif cmd == 'checar':
     p = carregar_perfil(); f = faltando(p)
     print('falta:', ', '.join(f) if f else 'nada. Pronto.')
+    vm = p.get('voz_medidas') or {}
+    if vm and 'passiva_por_1000' not in vm:
+        print('aviso: a voz foi medida por uma versão antiga. Se a pessoa quiser, peça 2 ou 3 textos dela de novo e rode '
+              'voz.py medir: ativa a comparação de voz passiva, pontuação e vocabulário. Não é obrigatório.')
     sys.exit(1 if [x for x in f if not x.startswith('voz (')] else 0)
 else:
     print(__doc__)

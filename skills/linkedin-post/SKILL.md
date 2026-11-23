@@ -48,6 +48,8 @@ Crie a pasta: `$PY $N/tools/novo.py "<título de trabalho>"` e preencha `<pasta>
 ## 2. Rascunho
 Escreva `<pasta>/post.md` (só o texto do post, pronto para colar):
 - Siga a **estrutura escolhida** (não o molde de sempre) e use o **detalhe único** de forma visível.
+- Cada parágrafo com pelo menos uma palavra, número ou expressão dela que você não teria previsto; parágrafo que
+  serviria para qualquer pessoa ganha o concreto que ela contou, ou sai (`estruturas.md`, "A palavra que o modelo não previa").
 - Abertura concreta que funcione sozinha antes do "…ver mais" (`formato.md`).
 - Do caso ao princípio; a ideia dita uma vez; fim que amplia (não resume).
 - Só o que ela contou (autoria, regra 2). No registro dela: `voz.md` é teto, não inspiração (regra 3).
@@ -61,8 +63,11 @@ Escreva `<pasta>/post.md` (só o texto do post, pronto para colar):
 
 ## 3. Conferir
 `$PY $N/tools/checar.py <pasta>/post.md`: além dos cacoetes de IA, ele aponta cacoetes da própria skill, ritmo
-monótono, detalhe único ausente e trechos ou aberturas repetidos de posts anteriores dela. Corrija todo ERRO e
-ATENÇÃO (ou explique a ela por que manter). Depois
+monótono, detalhe único ausente, trechos ou aberturas repetidos de posts anteriores dela e, comparando com a voz
+dela, voz passiva, pontuação e vocabulário fora do padrão. Corrija todo ERRO e ATENÇÃO (ou explique a ela por que
+manter). Quando ela trouxer um texto **dela** para revisar, mostre o **TEXTO MARCADO** que o verificador devolve
+(trecho em negrito, número do motivo e a lista de motivos) em vez de só listar os avisos: ver no texto ensina a ver
+o padrão. Se ela preferir, `--html` grava `revisao.html` colorida na pasta. Depois
 releia contra `anti-ia.md` ("conferidos lendo") e, se CFM, a checagem de `cfm.md`. Pergunte-se: tem experiência dela?
 Se não tem, volte à entrevista (regra 4).
 

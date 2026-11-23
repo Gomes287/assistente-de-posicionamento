@@ -85,6 +85,30 @@ PRIMEIRA_VERBO = re.compile(r'\b(?:\w{2,}(?:amos|emos|imos)|somos|\w{3,}ei|acho|
                             r'aprendi|percebi|vivi|senti|decidi|escrevi|fui|fiz|tive|pude|quis|li|ouvi|perdi|errei)\b', re.I)
 
 
+# voz passiva analítica: "foi decidido", "são observados", "tinha sido feito" (texto gerado usa mais)
+PASSIVA = re.compile(r'\b(?:é|são|foi|foram|era|eram|será|serão|seria|seriam|sendo|sido|ser|está sendo|estão sendo)\s+'
+                     r'(?:\w+mente\s+)?(?!(?:casad|cansad|obrigad|preocupad|furad|acostumad|interessad|ocupad|atrasad|'
+                     r'errad|lotad|complicad|delicad|sofisticad|avançad|adequad|apropriad|conhecid|querid)\w*\b)'
+                     r'[\wÀ-ú]{3,}(?:ado|ada|ados|adas|ido|ida|idos|idas|ito|ita|itos|itas|osto|osta|ostos|ostas)\b', re.I)
+# pontuação de quem fala: pergunta, exclamação, parênteses, reticências (texto gerado usa menos)
+EXPRESSIVA = re.compile(r'[?!(…]|\.\.\.')
+
+
+def mtld(palavras, limiar=0.72):
+    """Diversidade de vocabulário que não depende do tamanho do texto (McCarthy e Jarvis, 2010): quantas palavras,
+    em média, até o vocabulário começar a se repetir. Maior = vocabulário mais variado. None se o texto for curto."""
+    if len(palavras) < 100: return None
+    def passada(ws):
+        fatores, tipos, n = 0.0, set(), 0
+        for w in ws:
+            tipos.add(w); n += 1
+            if len(tipos) / n <= limiar:
+                fatores += 1; tipos, n = set(), 0
+        if n: fatores += (1 - len(tipos) / n) / (1 - limiar)
+        return len(ws) / fatores if fatores else len(ws)
+    return round((passada(palavras) + passada(palavras[::-1])) / 2, 1)
+
+
 def frases(t):
     t = re.sub(r'\s+', ' ', t)
     return [f for f in re.split(r'(?<=[.!?…])\s+', t) if len(f.split()) >= 2]
@@ -114,6 +138,9 @@ def medir(t):
         'emojis': len(EMOJI.findall(t)),
         'hashtags': len(re.findall(r'(?<!\w)#\w+', t)),
         'perguntas': t.count('?'),
+        'vocabulario_mtld': mtld(re.findall(r'[\wÀ-ú]+', t.lower())),
+        'passiva_por_1000': round(1000 * len(PASSIVA.findall(t)) / max(1, len(pal)), 1),
+        'pontuacao_expressiva_por_1000': round(1000 * len(EXPRESSIVA.findall(t)) / max(1, len(pal)), 1),
         'travessoes_por_1000': round(1000 * (t.count('—') + t.count(' – ')) / max(1, len(pal)), 1),
     }
 
