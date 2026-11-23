@@ -1,7 +1,7 @@
 # Assistente de posicionamento: como instalar pelo zip
 
 ## Para você
-1. Abra o app do Claude no computador e vá na aba **Code** (ou use o Cowork).
+1. Abra o app do Claude no computador e vá na aba **Code**. O Cowork e o chat do navegador não servem: lá a skill não guarda sua voz entre conversas.
 2. Arraste este zip para a conversa, ou deixe ele na pasta Downloads, e envie:
 
    > Instale o assistente de posicionamento deste zip: descompacte, leia o LEIA-ME.md e rode o instalador.
@@ -19,7 +19,8 @@ A configuração é uma conversa de uns 20 a 30 minutos, feita uma vez só. Ela 
 - **Se for médico:** CRM, UF e RQE.
 
 Depois disso, é só pedir numa conversa nova: "quero um post sobre…", "não sei o que postar essa semana" ou
-"carrossel sobre…". De 2 a 7 dias depois de publicar, exporte a planilha em Análises de publicação → Exportar e
+"carrossel sobre…". O Claude reconhece o pedido e usa a skill sozinho; se não usar, digite `/` na caixa de
+mensagem e escolha `linkedin-post` (ou `linkedin-carrossel`, `linkedin-config`). De 2 a 7 dias depois de publicar, exporte a planilha em Análises de publicação → Exportar e
 entregue à skill para ver o resultado.
 
 Para atualizar, faça o mesmo com o zip novo. Seu perfil, sua voz e seu histórico não são apagados: ficam no seu

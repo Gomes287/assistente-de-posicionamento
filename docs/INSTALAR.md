@@ -23,7 +23,7 @@ Funciona no Mac. No Windows, use o caminho B (ainda não testado a fundo).
 Para atualizar depois, repita o passo 3.
 
 ## Caminho com o zip (quando alguém te mandou o arquivo)
-1. Abra o app do Claude e vá na aba **Code** (ou use o Cowork).
+1. Abra o app do Claude e vá na aba **Code**. O Cowork e o chat do navegador não servem: lá a skill não guarda sua voz entre conversas.
 2. Arraste o zip `assistente-de-posicionamento-<versão>.zip` para a conversa, ou deixe ele na pasta Downloads, e envie:
 
    > Instale o assistente de posicionamento deste zip: descompacte, leia o LEIA-ME.md e rode o instalador.
