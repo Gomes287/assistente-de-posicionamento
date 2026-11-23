@@ -64,6 +64,8 @@ def slug(s, n=50):
 # ---- medidas de texto ---------------------------------------------------------------------------------------------
 EMOJI = re.compile('[\U0001F300-\U0001FAFF\U00002600-\U000027BF\U0001F000-\U0001F2FF⭐⬆↔-⇿✅❌]')
 PRIMEIRA = re.compile(r'\b(eu|meu|minha|meus|minhas|me|comigo|mim|a gente|n[óo]s|nosso|nossa|nossos|nossas)\b', re.I)
+# verbos na 1ª pessoa (o português omite o pronome): -amos/-emos/-imos, 'somos' e pretérito em -ei (falei, pensei)
+PRIMEIRA_VERBO = re.compile(r'\b(?:\w{2,}(?:amos|emos|imos)|somos|\w{3,}ei)\b', re.I)
 
 
 def frases(t):
@@ -86,7 +88,7 @@ def medir(t):
         'frase_longa_p90': sorted(tam)[int(0.9 * (len(tam) - 1))],
         'paragrafos': len(ps),
         'palavras_por_paragrafo': round(statistics.mean([len(p.split()) for p in ps]), 1) if ps else 0,
-        'primeira_pessoa_por_100': round(100 * len(PRIMEIRA.findall(t)) / max(1, len(pal)), 1),
+        'primeira_pessoa_por_100': round(100 * (len(PRIMEIRA.findall(t)) + len(PRIMEIRA_VERBO.findall(t))) / max(1, len(pal)), 1),
         'emojis': len(EMOJI.findall(t)),
         'hashtags': len(re.findall(r'(?<!\w)#\w+', t)),
         'perguntas': t.count('?'),
