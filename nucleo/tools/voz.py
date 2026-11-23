@@ -1,6 +1,7 @@
 """Mede a voz da pessoa a partir de posts antigos (o teto que o texto novo não deve passar).
 uso:
-  voz.py medir <arquivo> [arquivo...]    posts separados por uma linha '---'; grava a média no perfil
+  voz.py medir <arquivo> [arquivo...]    posts separados por uma linha '---'; grava a mediana no perfil como
+                                         ÂNCORA da voz (os posts publicados com a skill se somam depois, edicao.py)
                                          (não guarda cópia dos textos: só as medidas)
 O que é medido: tamanho de frase e de parágrafo, primeira pessoa, emojis, hashtags, perguntas, travessões,
 diversidade de vocabulário (MTLD), voz passiva e pontuação expressiva (? ! ( …).
@@ -19,7 +20,8 @@ if not textos:
 ms = [medir(t) for t in textos]
 med = {k: round(statistics.median(vs), 1) for k in ms[0] if (vs := [m[k] for m in ms if m[k] is not None])}
 med['posts_medidos'] = len(textos)
-p = carregar_perfil(obrigatorio=False); p['voz_medidas'] = med; salvar_perfil(p)
+p = carregar_perfil(obrigatorio=False); p['voz_ancora'] = med; p['voz_medidas'] = med
+combinar_voz(p); salvar_perfil(p)   # textos próprios = âncora; os posts publicados com a skill entram por cima (edicao.py)
 print(f'{len(textos)} posts medidos (mediana):')
 for k, v in med.items():
     print(f'  {k:26} {v}')

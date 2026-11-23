@@ -153,3 +153,48 @@ def ler_textos(arquivos):
             if len(bloco.split()) >= 25:
                 out.append(bloco.strip())
     return out
+
+
+# ---- voz que aprende com o que a pessoa publica ------------------------------------------------------------------
+# A voz é a mistura de duas fontes: a ÂNCORA (textos que a pessoa escreveu sem a skill, medidos na configuração) e os
+# PUBLICADOS (versões finais dos posts feitos com a skill), cada um com peso = quanto do texto é dela. Post que ela
+# quase não editou não entra: senão a skill aprende a própria voz e o verificador para de apontar os cacoetes.
+# A âncora vale pelo menos metade enquanto existir. Posts e artigos têm vozes separadas.
+PESO_MINIMO = 0.1
+JANELA = 15
+
+
+def _mediana_ponderada(pares):
+    pares = sorted(pares); total = sum(w for _, w in pares); acc = 0
+    for v, w in pares:
+        acc += w
+        if acc >= total / 2: return v
+    return pares[-1][0]
+
+
+def combinar_voz(p):
+    """Recalcula p['voz_medidas'] (posts) e p['voz_medidas_artigo'] a partir da âncora e dos publicados."""
+    ancora = p.get('voz_ancora') or {}
+    for tipo, chave in (('post', 'voz_medidas'), ('artigo', 'voz_medidas_artigo')):
+        pub = [x for x in p.get('voz_publicados', []) if x['tipo'] == tipo and x['peso'] >= PESO_MINIMO][-JANELA:]
+        base = ancora if tipo == 'post' else {}
+        soma = sum(x['peso'] for x in pub)
+        if not pub:
+            if base: p[chave] = dict(base)
+            continue
+        w = 0.5 * min(1, soma / 3) if base else 1.0
+        out = {}
+        for k in set(base) | {k for x in pub for k in x['medidas']}:
+            vals = [(x['medidas'][k], x['peso']) for x in pub if x['medidas'].get(k) is not None]
+            mp = _mediana_ponderada(vals) if vals else None
+            if k in base and base[k] is not None and mp is not None:
+                out[k] = round((1 - w) * base[k] + w * mp, 1)
+            elif mp is not None and (not base or k not in base):
+                out[k] = round(mp, 1)
+            elif k in base:
+                out[k] = base[k]
+        out['textos_proprios'] = ancora.get('posts_medidos', 0) if tipo == 'post' else 0
+        out['publicados_considerados'] = len(pub)
+        out['peso_dos_publicados'] = round(w, 2)
+        p[chave] = out
+    return p

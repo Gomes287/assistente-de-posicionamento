@@ -71,10 +71,31 @@ o padrão. Se ela preferir, `--html` grava `revisao.html` colorida na pasta. Dep
 releia contra `anti-ia.md` ("conferidos lendo") e, se CFM, a checagem de `cfm.md`. Pergunte-se: tem experiência dela?
 Se não tem, volte à entrevista (regra 4).
 
-## 4. Entregar
-Mostre: o trecho antes do "ver mais", o post inteiro, a intenção e a métrica que vai dizer se funcionou. Peça para ela
-ler em voz alta e mexer à vontade; aplique as mudanças dela. Lembre: **a skill não publica**. Ela cola no LinkedIn.
-Depois de publicar: `$PY $N/tools/memoria.py registrar <pasta> --link <url>`.
+## 4. Entregar e editar
+Antes de mostrar, guarde o rascunho: `$PY $N/tools/edicao.py iniciar <pasta>/post.md`. Mostre o trecho antes do
+"ver mais", a intenção e a métrica que vai dizer se funcionou, e **pergunte como ela quer mexer**:
+
+> "Quer ajustar aqui na conversa ou prefere editar direto no texto? Se for no texto, abro uma página no navegador:
+> você escreve à vontade e o verificador vai marcando o que vale olhar de novo."
+
+**Na conversa:** mostre `$PY $N/tools/edicao.py mostrar <pasta>/post.md`, que traz os parágrafos numerados (§1, §2…)
+com os trechos marcados ([1], [2]…), para ela apontar ("no §3 troca X por Y", "corta o §5", "o [2] pode ficar").
+Depois de **cada** mudança, registre quem escreveu: `$PY $N/tools/edicao.py marcar <pasta>/post.md pessoa` quando as
+palavras são dela (troca literal, trecho que ela digitou, corte que ela pediu) ou `… marcar <pasta>/post.md skill`
+quando ela pediu e você reescreveu ("deixa mais curto", "mais direto"). Se ela pedir as duas coisas, aplique e marque
+uma de cada vez. É isso que impede a voz de aprender o seu estilo no lugar do dela. Quando ela disser que um trecho
+marcado "é o jeito dela", acrescente a expressão em `voz.md` (seção "Expressões dela") para o verificador não insistir.
+
+**Direto no texto:** rode `$PY $N/tools/edicao.py pagina <pasta>/post.md` **em segundo plano**. Ela edita, clica em
+"Salvar e conferir" quantas vezes quiser e em "Concluir" no fim; tudo que ela escreveu conta como dela. Quando ela
+voltar à conversa, leia `post.md` de novo e confira com `checar.py`.
+
+Lembre: **a skill não publica**. Ela cola no LinkedIn. Ao registrar, pergunte se ela mexeu no texto no próprio
+LinkedIn antes de publicar; se sim, peça para colar a versão publicada, grave num arquivo e rode
+`$PY $N/tools/edicao.py final <pasta>/post.md <arquivo>`. Então: `$PY $N/tools/memoria.py registrar <pasta> --link <url>`.
+O registro soma a versão final à voz dela, **com peso pelo quanto o texto é dela**: post que ela quase não editou não
+entra (a skill não pode aprender a própria voz). Diga a ela, em uma frase, se o post entrou na voz. Se ela colar a
+versão final depois de registrar, rode `final` e em seguida `$PY $N/tools/edicao.py aprender <pasta>`.
 
 ## Artigo (texto longo do LinkedIn)
 Quando a ideia pede mais que um post (argumento com fonte, várias etapas, texto acima de ~3.000 caracteres), ou a
@@ -88,6 +109,8 @@ precisa de três coisas além do texto:
 3. **Post de divulgação** (`post.md`): o artigo não se espalha sozinho. Um post curto com a abertura do argumento
    e o convite para ler, conferido com `checar.py`.
 Referências do artigo vão no fim do texto, com link quando houver.
+A edição segue o passo 4 para cada arquivo (`edicao.py iniciar|mostrar|marcar|pagina <pasta>/artigo.md`); artigo e
+post têm vozes separadas, então o artigo nunca puxa o tamanho dos posts.
 
 ## 5. Resultado (2 a 7 dias depois)
 Jeito recomendado: no LinkedIn, **Análises de publicação → Exportar** (planilha .xlsx). A pessoa entrega o arquivo e

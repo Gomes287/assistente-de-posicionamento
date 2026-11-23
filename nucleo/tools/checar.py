@@ -191,7 +191,9 @@ def texto_marcado(t, marcas):
         if a < fim: continue                      # sobreposto a um trecho já marcado
         if mot not in ult: motivos.append(mot); ult[mot] = len(motivos)
         seg = t[a:b].strip(); a2 = a + t[a:b].index(seg[:1]) if seg else a
-        out.append(t[fim:a2]); out.append(f'**{seg}**[{ult[mot]}]'); fim = a2 + len(seg)
+        partes = [x.strip() for x in re.split(r'(\n\s*\n)', seg)]
+        seg_m = ''.join(x if re.fullmatch(r'\s*', x) else f'**{x}**' for x in re.split(r'(\n\s*\n)', seg))
+        out.append(t[fim:a2]); out.append(seg_m + f'[{ult[mot]}]'); fim = a2 + len(seg)
     out.append(t[fim:])
     return ''.join(out), motivos
 
@@ -226,7 +228,7 @@ def checar_texto(t, p, carrossel=False, artigo=False, ideia=None, anteriores=Non
     """marcas: se for uma lista, recebe (início, fim, motivo) de cada trecho suspeito, para mostrar no texto."""
     av = []  # (nivel, msg)  nivel: ERRO | ATENÇÃO | nota
     mk = lambda padrao, motivo: _marcar(marcas, t, padrao, motivo)
-    m = medir(t); v = p.get('voz_medidas') or {}
+    m = medir(t); v = (artigo and p.get('voz_medidas_artigo')) or p.get('voz_medidas') or {}
     n_op = (len(OPOSICAO.findall(t)) + len(MAIS_DO_QUE.findall(t)) + len(NAO_SEJA.findall(t))
             + len(NAO_APENAS.findall(t)) + len(OPOSICAO_2.findall(t)) + len(MENOS_MAIS.findall(t)))
     if n_op:
@@ -376,15 +378,24 @@ def checar_texto(t, p, carrossel=False, artigo=False, ideia=None, anteriores=Non
     return m, av
 
 
-if __name__ == '__main__':
-    if len(sys.argv) < 2: sys.exit(__doc__)
-    t = Path(sys.argv[1]).read_text(encoding='utf-8'); p = carregar_perfil(obrigatorio=False)
-    fi = Path(sys.argv[1]).parent / 'ideia.json'
+def conferir(arquivo, artigo=False, carrossel=False, texto=None):
+    """Confere um arquivo (ou o texto dado no lugar dele) com o perfil, a ideia.json da pasta e a memória.
+    Devolve (texto, medidas, avisos, marcas)."""
+    arquivo = Path(arquivo); t = texto if texto is not None else arquivo.read_text(encoding='utf-8')
+    p = carregar_perfil(obrigatorio=False)
+    fi = arquivo.parent / 'ideia.json'
     ideia = json.load(open(fi, encoding='utf-8')) if fi.exists() else None
     marcas = []
-    m, av = checar_texto(t, p, '--carrossel' in sys.argv, '--artigo' in sys.argv, ideia, anteriores_da_memoria(sys.argv[1]), marcas)
+    m, av = checar_texto(t, p, carrossel, artigo, ideia, anteriores_da_memoria(arquivo), marcas)
+    return t, m, av, marcas
+
+
+if __name__ == '__main__':
+    if len(sys.argv) < 2: sys.exit(__doc__)
+    p = carregar_perfil(obrigatorio=False)
+    t, m, av, marcas = conferir(sys.argv[1], '--artigo' in sys.argv, '--carrossel' in sys.argv)
     print('ANTES DO "…VER MAIS" (o que decide se abrem):\n' + '-' * 60 + '\n' + ver_mais(t) + '\n' + '-' * 60)
-    v = p.get('voz_medidas') or {}
+    v = ('--artigo' in sys.argv and p.get('voz_medidas_artigo')) or p.get('voz_medidas') or {}
     print('\nmedidas (texto · voz da pessoa):')
     for k in ('caracteres', 'palavras_por_frase', 'paragrafos', 'primeira_pessoa_por_100', 'emojis', 'hashtags', 'perguntas',
               'travessoes_por_1000', 'vocabulario_mtld', 'passiva_por_1000', 'pontuacao_expressiva_por_1000'):

@@ -43,7 +43,8 @@ e deixe ela ajustar. Ex.: "erro comum que eu vejo", "bastidores do trabalho", "l
 
 ## 4. Voz
 - **Já publica:** peça 5 a 20 posts dela (colar aqui ou arquivo), separados por uma linha `---`. Salve em um arquivo
-  e rode `$PY $N/tools/voz.py medir <arquivo>`. Depois leia os posts e escreva `~/.config/assistente-de-posicionamento/voz.md`:
+  e rode `$PY $N/tools/voz.py medir <arquivo>` (esses textos viram a **âncora** da voz; depois, cada post publicado
+  com a skill se soma a ela, na medida em que ela editou). Depois leia os posts e escreva `~/.config/assistente-de-posicionamento/voz.md`:
   como ela abre, tamanho e ritmo das frases, vocabulário e expressões que usa, como fecha, o que ela **nunca** faz,
   2–3 trechos curtos que são a cara dela (só trechos neutros, nunca nada pessoal ou de terceiros).
   `voz.py` lista **expressões que se repetem** entre os textos: confira quais são mesmo dela e copie-as **literalmente**

@@ -162,6 +162,8 @@ if cmd == 'registrar':
           'resultado': {}, 'aprendizado': ''}
     itens.append(it); gravar(itens); print('registrado:', it['id'], '·', it['intencao'], '·', it['linha'])
     if not link: print('sem link ainda: quando publicar, use memoria.py vincular', it['id'], '<URL>')
+    if (P / 'edicao.json').exists():                     # a voz aprende com a versão final, na medida em que é dela
+        from edicao import aprender; aprender(P)
 elif cmd == 'vincular':
     it = achar(itens, sys.argv[2]); it['link'] = sys.argv[3]; gravar(itens); print('link guardado.')
 elif cmd == 'importar':
