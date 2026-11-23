@@ -80,7 +80,9 @@ def slug(s, n=50):
 EMOJI = re.compile('[\U0001F300-\U0001FAFF\U00002600-\U000027BF\U0001F000-\U0001F2FF⭐⬆↔-⇿✅❌]')
 PRIMEIRA = re.compile(r'\b(eu|meu|minha|meus|minhas|me|comigo|mim|a gente|n[óo]s|nosso|nossa|nossos|nossas)\b', re.I)
 # verbos na 1ª pessoa (o português omite o pronome): -amos/-emos/-imos, 'somos' e pretérito em -ei (falei, pensei)
-PRIMEIRA_VERBO = re.compile(r'\b(?:\w{2,}(?:amos|emos|imos)|somos|\w{3,}ei)\b', re.I)
+PRIMEIRA_VERBO = re.compile(r'\b(?:\w{2,}(?:amos|emos|imos)|somos|\w{3,}ei|acho|acredito|considero|penso|vejo|proponho|'
+                            r'faço|chamo|sigo|quero|sei|tenho|digo|olho|vou|estou|sou|percebo|entendo|defendo|prefiro|'
+                            r'aprendi|percebi|vivi|senti|decidi|escrevi|fui|fiz|tive|pude|quis|li|ouvi|perdi|errei)\b', re.I)
 
 
 def frases(t):
@@ -89,7 +91,10 @@ def frases(t):
 
 
 def paragrafos(t):
-    return [p.strip() for p in re.split(r'\n\s*\n', t) if p.strip()]
+    ps = [p.strip() for p in re.split(r'\n\s*\n', t) if p.strip()]
+    if len(ps) <= 1 and t.strip().count('\n') >= 3:   # texto colado do LinkedIn costuma vir com quebra simples
+        ps = [l.strip() for l in t.split('\n') if l.strip()]
+    return ps
 
 
 def medir(t):

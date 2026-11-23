@@ -20,6 +20,17 @@ detecta os que dá para detectar; os outros você confere lendo.
 - **Parágrafos simétricos:** todos com o mesmo tamanho, como se saíssem do mesmo molde.
 - **Hashtags demais** (mais de 3–5).
 
+## Detectados desde a leitura de sete textos reais (`padroes-observados.md`)
+- **Frases que anunciam** o próximo parágrafo ("merece destaque:", "há uma pergunta que…", "é simples:") e muitas
+  linhas terminando em dois-pontos.
+- **Começos (ou finais) iguais em série:** "Não controlamos… Não controlamos…", "Se…, Se…, Se…", "Governos mudam.
+  Regras mudam."
+- **Oposição dividida em duas frases** ("não é X. É Y.") e **"não apenas…, mas também…"**, "menos sobre X e mais sobre Y".
+- **Enumerações de 4+ itens** repetidas.
+- **Cautela em excesso** ("pode", "talvez" em quase toda frase).
+- **Intertítulos Em Maiúscula Em Cada Palavra** e **marcação em massa** de pessoas.
+- **O fim acumulando recursos de efeito.**
+
 ## Cacoetes da própria skill
 Ao fugir dos vícios clássicos, a skill cria os dela ("Repara que…", "Em que situação você já viu…?", "e é aí que…").
 Com mil pessoas usando, isso vira uma assinatura reconhecível. `checar.py` tem a lista (`CACOETES_SKILL`); quando

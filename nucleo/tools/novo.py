@@ -16,7 +16,7 @@ if not f.exists():
         "titulo_trabalho": sys.argv[1],
         "experiencia": "", "o_que_percebeu": "", "segunda_leitura": "",
         "ideia": "", "ponto_de_vista": "", "para_quem": "",
-        "detalhe_unico": "", "estrutura": "",
+        "detalhe_unico": "", "ponte": "", "estrutura": "",
         "intencao": "", "linha": "", "formato": "", "por_que_formato": "", "metrica_principal": "",
         "fontes": [], "pergunta_final": ""
     }, open(f, 'w', encoding='utf-8'), indent=1, ensure_ascii=False)

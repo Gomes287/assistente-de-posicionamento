@@ -10,22 +10,34 @@ from comum import *
 
 OPOSICAO = re.compile(r"\bn[ãa]o (?:[ée]|se trata de|significa|basta)\b[^.!?\n]{0,60}?[,;—–-]\s*(?:mas |e sim |[ée] )", re.I)
 NAO_SEJA = re.compile(r"\bn[ãa]o (?:seja|ser[áa]|est[áa]|esteja|foi|era)\b[^.!?\n]{0,80}?,\s*mas\b", re.I)
+NAO_APENAS = re.compile(r"\bn[ãa]o (?:[ée] )?(?:apenas|s[óo]|somente)\b[^.!?\n]{0,140}?(?:\bmas (?:também|sim)\b|[;—–]\s*[ée]\b)", re.I)
+OPOSICAO_2 = re.compile(r"\bn[ãa]o (?:[ée]|se trata de)\b[^.!?\n]{3,90}[.;]\s+(?:[ÉE]\b|Trata-se\b)")
+MENOS_MAIS = re.compile(r"\bmenos (?:sobre|do que|um|uma|a|o)\b[^.!?\n]{0,90}?\be mais\b", re.I)
 MAIS_DO_QUE = re.compile(r"\bmais do que [^.!?\n]{1,40}?, [ée]\b", re.I)
 # cacoetes que a PRÓPRIA skill tende a criar ao fugir dos clássicos de IA (em escala, viram assinatura reconhecível).
 # Se a expressão estiver em voz.md (é da pessoa), não vale o aviso.
-CACOETES_SKILL = ["repara que", "em que situação você já viu", "em que situação vocês já viram", "e aí vem o detalhe",
+CACOETES_SKILL = ["fica uma pergunta", "e, principalmente:", "merece destaque", "repara que", "em que situação você já viu", "em que situação vocês já viram", "e aí vem o detalhe",
                   "o detalhe que quase ninguém percebe", "e é aí que", "a pergunta que fica", "fica a pergunta",
                   "o que fica é", "no fundo,", "e tudo bem", "spoiler", "vou te contar", "deixa eu te contar",
                   "pois é", "simples assim", "faz sentido?", "parece óbvio, mas", "parece simples, mas"]
 CLICHES = ["vivemos em um mundo", "vivemos num mundo", "nunca foi tão importante", "na era digital", "o futuro já chegou",
            "fora da caixa", "novo paradigma", "cada vez mais", "nos dias de hoje", "precisamos refletir",
-           "a transformação começa", "em um mundo cada vez", "no cenário atual", "não é de hoje"]
+           "a transformação começa", "em um mundo cada vez", "no cenário atual", "não é de hoje", "mundo dos negócios",
+           "dinâmico e competitivo", "zona de conforto", "protagonismo", "à medida que navegamos", "complexidades do",
+           "ambiente empresarial moderno", "é uma necessidade", "teste do tempo", "leitura obrigatória"]
+# frases que anunciam o próximo parágrafo em vez de dizer a coisa
+ANUNCIOS = ["merece destaque", "há uma pergunta", "faço uma ressalva", "o que me chama a atenção", "ganha outra dimensão",
+            "é justamente por isso", "existe algo que", "é simples:", "e, principalmente", "esse movimento importa porque",
+            "o que esse caso coloca", "a questão que proponho", "uma mensagem da aula", "é nesse processo que",
+            "isso me fez pensar em algo", "vale destacar", "o ponto é:", "a verdade é que", "o segredo é", "a lição é"]
 TRANSICOES = ["nesse contexto", "neste contexto", "diante desse cenário", "diante deste cenário", "vale ressaltar",
               "é importante destacar", "é importante ressaltar", "em suma", "dito isso", "por fim, mas não menos",
               "em última análise", "nesse sentido"]
-VOCAB_IA = ["jornada", "alavancar", "potencializar", "desbloquear", "mergulhar", "mergulho profundo", "navegar",
-            "sinergia", "ecossistema", "robusto", "robusta", "disruptiv", "game changer", "insights valiosos",
-            "fazer a diferença", "elevar o nível", "transformador", "transformadora"]
+# radicais: "naveg" pega navegar, navegamos, navegando
+VOCAB_IA = ["jornada", "alavanc", "potencializ", "desbloque", "mergulh", "naveg", "galvaniz", "sinergi", "ecossistema",
+            "robust", "disruptiv", "game changer", "insights valiosos", "valiosos insights", "valiosas lições",
+            "fazer a diferença", "elevar o nível", "transformador", "farol de", "obra seminal", "testemunho d",
+            "exploração profunda", "plano mestre", "aplicabilidade universal"]
 ABERTURAS = [r"^\s*voc[êe] j[áa] parou para pensar", r"^\s*j[áa] parou para pensar", r"^\s*imagine (?:s[óo] )?(?:um|uma|que)"]
 FECHOS = [r"e voc[êe],? o que (?:acha|pensa)\??\s*$", r"concorda\??\s*$", r"deixe? (?:nos|aqui nos) coment[áa]rios",
           r"comente abaixo", r"me conta nos coment[áa]rios\s*[.!]?\s*$"]
@@ -39,6 +51,54 @@ CFM_RISCO = {"promessa de resultado": r"\b(garant\w*|cura\w*|curar|resultado cer
 def achar(lista, t):
     tl = t.lower()
     return [x for x in lista if x in tl]
+
+
+def achar_radical(lista, t):
+    tl = t.lower()
+    return sorted({m.group(0) for x in lista for m in re.finditer(r'\b' + re.escape(x) + r'[\wÀ-ú]*', tl)})
+
+
+def anaforas(t):
+    """3+ frases seguidas (de qualquer tamanho) começando pela mesma palavra: "Não controlamos… Não controlamos…",
+    "Se…, Se…, Se…", "Será que…? Será que…?". E frases curtas seguidas terminando igual ("Governos mudam. Regras mudam.")."""
+    fs = [f for p in paragrafos(t) for f in frases(p)]
+    w = [re.sub(r'[^\wÀ-ú ]', '', f).lower().split() for f in fs]
+    achados, i = [], 0
+    while i < len(w) - 2:
+        if w[i] and w[i][0] not in ('o', 'a', 'os', 'as', 'e', 'de', 'em', 'um', 'uma') and all(w[k] and w[k][0] == w[i][0] for k in (i + 1, i + 2)):
+            j = i + 3
+            while j < len(w) and w[j] and w[j][0] == w[i][0]: j += 1
+            achados.append(f'{j - i}x "{w[i][0].capitalize()}…"'); i = j
+        else:
+            i += 1
+    for i in range(len(w) - 1):
+        a, b = w[i], w[i + 1]
+        if 2 <= len(a) <= 4 and 2 <= len(b) <= 4 and a[-1] == b[-1] and len(a[-1]) > 3:
+            achados.append(f'"{fs[i]} {fs[i + 1]}"')
+    return achados
+
+
+def titulos_ingles(t):
+    """Intertítulos com Maiúscula Em Cada Palavra (padrão do inglês, comum em texto gerado ou traduzido)."""
+    n = 0
+    for l in t.split('\n'):
+        l = l.strip().lstrip('#*•-– ').strip()
+        ws = l.split()
+        if not 3 <= len(ws) <= 10 or l[-1:] in '.?!:;,' or l.isupper(): continue
+        cont = [x for x in ws if x.lower() not in ('de', 'da', 'do', 'das', 'dos', 'e', 'a', 'o', 'para', 'em', 'no', 'na', 'com', 'por')]
+        if len(cont) >= 3 and sum(1 for x in cont if x[:1].isupper()) / len(cont) >= 0.8: n += 1
+    return n
+
+
+def marcadores_de_efeito(t):
+    return (len(OPOSICAO.findall(t)) + len(OPOSICAO_2.findall(t)) + len(NAO_APENAS.findall(t)) + len(NAO_SEJA.findall(t))
+            + len(MENOS_MAIS.findall(t)) + len(anaforas(t)) + _pares_iguais(t)
+            + len(re.findall(r'^\s*(?:afinal|no fim das contas|em resumo)[, ]', t, re.I | re.M)))
+
+
+def _pares_iguais(t):
+    w = [re.sub(r'[^\wÀ-ú ]', '', f).lower().split()[:1] for p in paragrafos(t) for f in frases(p)]
+    return sum(1 for a, b in zip(w, w[1:]) if a and a == b and a[0] not in ('o', 'a', 'os', 'as', 'e', 'de', 'em', 'um', 'uma'))
 
 
 def paralelas(t):
@@ -99,15 +159,46 @@ def ver_mais(t, n=210):
 def checar_texto(t, p, carrossel=False, artigo=False, ideia=None, anteriores=None):
     av = []  # (nivel, msg)  nivel: ERRO | ATENÇÃO | nota
     m = medir(t); v = p.get('voz_medidas') or {}
-    n_op = len(OPOSICAO.findall(t)) + len(MAIS_DO_QUE.findall(t)) + len(NAO_SEJA.findall(t))
+    n_op = (len(OPOSICAO.findall(t)) + len(MAIS_DO_QUE.findall(t)) + len(NAO_SEJA.findall(t))
+            + len(NAO_APENAS.findall(t)) + len(OPOSICAO_2.findall(t)) + len(MENOS_MAIS.findall(t)))
     if n_op >= 2: av.append(('ATENÇÃO', f'oposição "não é X, é Y" {n_op}x: cacoete de IA. Deixe no máximo uma.'))
     elif n_op == 1: av.append(('nota', 'uma oposição "não é X, é Y": ok se for a ideia central; não repita.'))
-    for nome, lista in (('clichê', CLICHES), ('transição mecânica', TRANSICOES), ('vocabulário de IA', VOCAB_IA)):
+    for nome, lista in (('clichê', CLICHES), ('transição mecânica', TRANSICOES)):
         a = achar(lista, t)
         if a: av.append(('ATENÇÃO', f'{nome}: ' + ', '.join(f'"{x}"' for x in a)))
+    a = achar_radical(VOCAB_IA, t)
+    if a: av.append(('ATENÇÃO', 'vocabulário de IA: ' + ', '.join(f'"{x}"' for x in a)))
+    an = anaforas(t)
+    if an: av.append(('ATENÇÃO', 'frases começando ou terminando do mesmo jeito em série: ' + '; '.join(an[:3])))
+    tri_longa = len(re.findall(r'(?:[\wÀ-ú]+ ){0,4}[\wÀ-ú]+, (?:[\wÀ-ú]+ ){0,4}[\wÀ-ú]+,? e (?:[\wÀ-ú]+ ){0,4}[\wÀ-ú]+[.!;:?]', t))
+    enum = len(re.findall(r'(?:[\wÀ-ú]+(?: [\wÀ-ú]+){0,4}, ){3,}(?:[\wÀ-ú]+ ){0,4}[\wÀ-ú]+,? e ', t))
+    if enum >= 2: av.append(('ATENÇÃO', f'{enum} enumerações de 4+ itens: escolha os que importam.'))
+    anun = achar(ANUNCIOS, t); dois_pontos = len(re.findall(r'[^\n]{8,}:\s*$', t, re.M))
+    if len(anun) >= 2 or dois_pontos >= 3:
+        av.append(('ATENÇÃO', 'frases que anunciam o próximo parágrafo em vez de dizer a coisa' +
+                   (': ' + ', '.join(f'"{x}"' for x in anun) if anun else '') + (f' ({dois_pontos} linhas terminando em ":")' if dois_pontos >= 3 else '')))
+    cautela = len(re.findall(r'\b(?:pode|podem|poderia|poderiam|talvez|possivelmente|eventualmente)\b', t, re.I))
+    if m['palavras'] >= 150 and 100 * cautela / m['palavras'] > 1.3:
+        av.append(('ATENÇÃO', f'cautela em excesso: {cautela}x "pode/talvez". Afirme o que você sustenta.'))
+    if titulos_ingles(t) >= 2: av.append(('ATENÇÃO', 'intertítulos com Maiúscula Em Cada Palavra (padrão do inglês): em português, só a primeira.'))
+    marc = len(re.findall(r'linkedin\.com/in/|(?<![\w.])@[\wÀ-ú]', t))
+    if marc > 3: av.append(('ATENÇÃO', f'{marc} pessoas marcadas: marcação em massa é lida como tática de alcance. Marque só quem está no texto.'))
+    if re.search(r'\b(?:na aula|da aula|o m[óo]dulo|na turma|programa de forma[çc][ãa]o|forma[çc][ãa]o de|facilitador|professora? )', t, re.I):
+        av.append(('nota', 'post de aula: os colegas vão publicar sobre a mesma aula. O que VOCÊ viveu que conversa com ela? '
+                           'Conte isso; o agradecimento cabe numa linha no fim.'))
+    if re.search(r'\b(?:chamo isso de|batizei (?:isso )?de|dei o nome de|que chamo de)\b', t, re.I):
+        av.append(('nota', 'conceito com nome próprio: confira se já existe com outro nome (ex.: custo do atraso, opções reais) e cite; reforça, não enfraquece.'))
+    fs_all = [f for p in paragrafos(t) for f in frases(p)]
+    if len(fs_all) >= 12:
+        corte = int(len(fs_all) * 0.75)
+        fim, ini = ' '.join(fs_all[corte:]), ' '.join(fs_all[:corte])
+        mf, mi = marcadores_de_efeito(fim), marcadores_de_efeito(ini)
+        if mf >= 2 and mf > mi / 3:
+            av.append(('ATENÇÃO', f'o fim acumula recursos de efeito ({mf} no último quarto): termine onde a ideia acaba, sem aforismo em cascata.'))
     if any(re.search(r, t, re.I) for r in ABERTURAS): av.append(('ATENÇÃO', 'abertura genérica ("você já parou para pensar"/"imagine"). Abra com a cena ou observação concreta.'))
     if any(re.search(r, t.strip(), re.I | re.M) for r in FECHOS): av.append(('ATENÇÃO', 'fecho genérico ("e você, o que acha?"/"concorda?"). Pergunta específica, que só a pessoa faria.'))
     triades = len(re.findall(r'\b[\wÀ-ú]+(?: [\wÀ-ú]+)?, [\wÀ-ú]+(?: [\wÀ-ú]+)? e [\wÀ-ú]+(?: [\wÀ-ú]+)?[.!]', t))
+    if triades < 2 and tri_longa >= 3: triades = tri_longa
     if triades >= 2: av.append(('ATENÇÃO', f'{triades} tríades "X, Y e Z." para dar ritmo: cacoete de IA.'))
     par = paralelas(t)
     if par: av.append(('ATENÇÃO', 'frases paralelas em série (molde de IA): ' + ' | '.join(f'"{x}"' for x in par[:2])))
@@ -133,6 +224,8 @@ def checar_texto(t, p, carrossel=False, artigo=False, ideia=None, anteriores=Non
             achou = [w for w in chave if w in t.lower()]
             if chave and len(achou) < max(1, len(chave) // 3):
                 av.append(('ATENÇÃO', f'o detalhe único ("{det[:60]}") não aparece no texto. É ele que diferencia o post.'))
+        if 'ponte' in ideia and not (ideia.get('ponte') or '').strip():
+            av.append(('ATENÇÃO', 'ideia.json sem "ponte": por que essa experiência importa para o seu público e para o seu trabalho?'))
         if ideia.get('estrutura') and ideia['estrutura'] not in ESTRUTURAS:
             av.append(('nota', f'estrutura "{ideia["estrutura"]}" fora do catálogo (estruturas.md).'))
     for nome, ant in (anteriores or []):

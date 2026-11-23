@@ -13,7 +13,7 @@ description: >-
 `SK` = a pasta deste SKILL.md. `N=$(cd -P "$SK/../../nucleo" && pwd)` · `PY=python3`.
 Antes de tudo: `$PY $N/tools/perfil.py checar` (se faltar perfil, use a skill **linkedin-config**). Leia
 `~/.config/assistente-de-posicionamento/voz.md`, `~/.config/assistente-de-posicionamento/notas.md` (regras dela, valem acima destas) e
-`$N/referencia/autoria.md`, `anti-ia.md`, `intencao.md`, `formato.md`, `estruturas.md`. Se `conselho` = CFM: `conselhos/cfm.md`. Se `sigilo` = true: `conselhos/sigilo.md` (sempre).
+`$N/referencia/autoria.md`, `anti-ia.md`, `intencao.md`, `formato.md`, `estruturas.md`, `padroes-observados.md`. Se `conselho` = CFM: `conselhos/cfm.md`. Se `sigilo` = true: `conselhos/sigilo.md` (sempre).
 `$PY $N/tools/memoria.py resumo` mostra o que já foi publicado (não repita ideia; veja que linha está sem post).
 
 ## 1. Entrevista (antes de escrever qualquer coisa)
@@ -32,11 +32,18 @@ dele e pergunte só o que faltar.
 7. Fontes de todo número.
 8. **O detalhe que só ela sabe** (lugar, número da experiência dela, frase dita, decisão, o que sentiu). Sem ele,
    não escreva: é o que impede o post de parecer o de outra pessoa (`estruturas.md`).
-9. **Estrutura:** escolha no catálogo de `estruturas.md` a que serve à ideia, evitando as dos últimos posts dela
+9. **Ponte:** por que essa experiência importa para o público dela e para o trabalho dela? Experiência sem ponte vira
+   crônica; ponte sem experiência vira texto de qualquer um (`padroes-observados.md` §1–2). Grave em `"ponte"`.
+10. **Uma ideia só.** Se aparecerem duas (um guia e um agradecimento, um argumento e uma resenha), ofereça dividir em
+   dois conteúdos.
+11. **Post de aula, livro ou evento:** o centro é o que ELA viveu que conversa com o tema; o agradecimento cabe numa
+   linha no fim; resenha tem opinião dela e crédito em qualquer trecho de terceiros. Se ela der nome a um conceito,
+   procure o conceito vizinho que já existe e cite.
+12. **Estrutura:** escolha no catálogo de `estruturas.md` a que serve à ideia, evitando as dos últimos posts dela
    (`memoria.py resumo` mostra quais foram).
 
 Crie a pasta: `$PY $N/tools/novo.py "<título de trabalho>"` e preencha `<pasta>/ideia.json` com as respostas
-(`metrica_principal` coerente com a intenção, `detalhe_unico` e `estrutura` preenchidos).
+(`metrica_principal` coerente com a intenção, `detalhe_unico`, `ponte` e `estrutura` preenchidos).
 
 ## 2. Rascunho
 Escreva `<pasta>/post.md` (só o texto do post, pronto para colar):
@@ -44,7 +51,8 @@ Escreva `<pasta>/post.md` (só o texto do post, pronto para colar):
 - Abertura concreta que funcione sozinha antes do "…ver mais" (`formato.md`).
 - Do caso ao princípio; a ideia dita uma vez; fim que amplia (não resume).
 - Só o que ela contou (autoria, regra 2). No registro dela: `voz.md` é teto, não inspiração (regra 3).
-- Varie o fim (`estruturas.md`, "Fins"). Pergunta só quando a intenção for `conversar`, e específica, com as
+- Termine onde a ideia acaba: nada de aforismo em escada, "menos sobre X e mais sobre Y" ou parágrafos espelhados no
+  fim (é onde mais aparece o molde). Varie o fim (`estruturas.md`, "Fins"). Pergunta só quando a intenção for `conversar`, e específica, com as
   palavras do assunto (não "em que situação você já viu isso?").
 - Use as expressões literais dela (`voz.md`), não as suas.
 - Hashtags: 0 a 3, se ela costuma usar.
