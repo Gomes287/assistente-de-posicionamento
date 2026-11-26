@@ -14,6 +14,8 @@ description: >-
 Antes: `$PY $N/tools/perfil.py checar` (sem perfil → **linkedin-config**). Leia `voz.md`, `notas.md`
 (em `~/.config/assistente-de-posicionamento/`), e `$N/referencia/autoria.md`, `anti-ia.md`, `intencao.md`, `formato.md`
 (+ `conselhos/cfm.md` se CFM, `conselhos/sigilo.md` se `sigilo`).
+Rode também `$PY $N/tools/memoria.py pendencias` e, se houver algo, diga em uma frase e ofereça resolver (como no
+**linkedin-post**).
 
 ## 1. Ideia antes de slide
 Faça a entrevista do **linkedin-post**, passo 1 (experiência, ideia em uma frase, ponto de vista, para quem, intenção,

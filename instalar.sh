@@ -51,6 +51,14 @@ for c in python3 python; do
 done
 if [ -n "$PY" ]; then
   "$PY" "$DEST/nucleo/tools/verificar.py" || true
+  # atalho na Área de Trabalho (Mac): dois cliques abrem o painel no navegador
+  if [ "$(uname)" = "Darwin" ] && [ -d "$HOME/Desktop" ]; then
+    ATALHO="$HOME/Desktop/Painel do LinkedIn.command"
+    printf '#!/bin/bash\n# Abre o painel do Assistente de posicionamento. Fechar esta janela fecha o painel.\nclear\n"%s" "%s"\n' \
+      "$(command -v "$PY")" "$DEST/nucleo/tools/painel.py" > "$ATALHO"
+    chmod +x "$ATALHO"
+    echo "  ✔ Atalho na Área de Trabalho: Painel do LinkedIn (dois cliques abrem o painel)"
+  fi
 else
   echo "Falta o Python 3 (3.9 ou mais novo). No Mac, rode 'python3' no Terminal e aceite instalar as ferramentas de"
   echo "desenvolvedor, ou baixe em python.org/downloads. Depois rode este instalador de novo."

@@ -79,7 +79,8 @@ Objetivo: que o visual dela não seja igual ao de todo mundo que usa a skill.
 Depois `$PY $N/tools/carrossel.py --demo ./previa_carrossel.png` e **mostre a imagem**: "é assim que seus
 carrosséis vão ficar; quer mudar cor, fonte, layout ou foto?". Precisa de Chrome/Edge/Brave instalado.
 Termine com `$PY $N/tools/perfil.py checar` e diga que, a partir de agora, é só pedir "post sobre…" ou
-"carrossel sobre…".
+"carrossel sobre…". Conte também do painel: "abre meu painel" (ou o atalho "Painel do LinkedIn" na Área de
+Trabalho) mostra o que está pendente, o histórico e ideias para o próximo post.
 
 ## Regras da pessoa
 Correções que ela der sobre o jeito de escrever ou de trabalhar vão em `~/.config/assistente-de-posicionamento/notas.md`, com

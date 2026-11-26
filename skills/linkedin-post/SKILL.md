@@ -5,7 +5,8 @@ description: >-
   experiência à ideia, e da ideia à intenção), escreve o rascunho respeitando regras de autoria, confere cacoetes de IA,
   a voz medida e as regras do conselho profissional (CFM para médicos), e depois registra o que aconteceu para aprender
   com os números. Use quando pedirem "post para o LinkedIn", "escreve um post sobre…", "transforma isso num post",
-  "o que eu posto essa semana?", "não sei sobre o que postar", ou quando trouxerem os números de um post publicado.
+  "o que eu posto essa semana?", "não sei sobre o que postar", quando trouxerem os números de um post publicado,
+  ou pedirem "abre meu painel", "o que está pendente?".
 ---
 
 # Post de LinkedIn: da experiência à publicação
@@ -16,11 +17,23 @@ Antes de tudo: `$PY $N/tools/perfil.py checar` (se faltar perfil, use a skill **
 `$N/referencia/autoria.md`, `anti-ia.md`, `intencao.md`, `formato.md`, `estruturas.md`, `padroes-observados.md`. Se `conselho` = CFM: `conselhos/cfm.md`. Se `sigilo` = true: `conselhos/sigilo.md` (sempre).
 `$PY $N/tools/memoria.py resumo` mostra o que já foi publicado (não repita ideia; veja que linha está sem post).
 
+**Pendências primeiro.** `$PY $N/tools/memoria.py pendencias` lista o que espera a pessoa: rascunho pronto e não
+registrado ("já publicou?"), post que veio da planilha e é o mesmo de uma pasta (`juntar`), post sem link, posts com
+2 dias ou mais sem números (hora de exportar a planilha), posts importados sem intenção, números sem aprendizado. Na
+primeira resposta, em uma ou duas frases, diga o que está pendente e ofereça resolver agora ou depois; não trave o
+pedido dela por isso. Se ela disser que já publicou, peça o link e registre (passo 4).
+
+**Painel.** Se ela pedir o painel (ou preferir ver tudo numa página), rode `$PY $N/tools/painel.py` **em segundo
+plano**: abre no navegador as pendências (com campos para colar o link, enviar a planilha e escolher a intenção), o
+histórico com os números, as ideias para o próximo post e a voz. A página não escreve posts: os botões copiam o pedido
+para ela colar numa conversa nova. O instalador deixa um atalho "Painel do LinkedIn" na Área de Trabalho (Mac).
+
 ## 1. Entrevista (antes de escrever qualquer coisa)
 Converse, uma ou duas perguntas por vez (`intencao.md` §1). Se ela já trouxe um texto, artigo ou anotação, extraia
 dele e pergunte só o que faltar.
 1. **Experiência:** que situação viveu, percebeu, aprendeu? Se ela trouxe só um tema, peça uma situação concreta ligada
-   a ele. Se não tiver nenhuma, ofereça o banco de ideias (`notas.md`) ou uma das linhas editoriais.
+   a ele. Se não tiver nenhuma, ofereça o banco de ideias (`notas.md`) ou uma das linhas editoriais. Quando usar
+   uma ideia do banco, acrescente ao fim dela em `notas.md` "(usada em <pasta>)": o painel deixa de sugeri-la.
 2. **O que percebeu** e a **segunda leitura** ("mas será que era isso mesmo?").
 3. **A ideia em uma frase:** o que alguém deve levar daqui. Se só houver assunto, devolva "e daí?". Sem essa frase,
    não escreva.
