@@ -18,6 +18,13 @@ A configuração é uma conversa de uns 20 a 30 minutos, feita uma vez só. Ela 
 - **Uma foto de rosto**, para a capa dos carrosséis (opcional).
 - **Se for médico:** CRM, UF e RQE.
 
+## Painel
+O instalador deixa na Área de Trabalho o atalho **Painel do LinkedIn** (Mac). Dois cliques abrem no navegador o
+que está pendente (colar o link do post, enviar a planilha do LinkedIn), o que você já publicou com os números,
+ideias para o próximo post e a sua voz. O painel roda só no seu computador. Para escrever, os botões copiam o pedido
+para você colar na conversa com o Claude. Também dá para pedir ao Claude: "abre meu painel".
+
+## Usar
 Depois disso, é só pedir numa conversa nova: "quero um post sobre…", "não sei o que postar essa semana" ou
 "carrossel sobre…". O Claude reconhece o pedido e usa a skill sozinho; se não usar, digite `/` na caixa de
 mensagem e escolha `linkedin-post` (ou `linkedin-carrossel`, `linkedin-config`). De 2 a 7 dias depois de publicar, exporte a planilha em Análises de publicação → Exportar e

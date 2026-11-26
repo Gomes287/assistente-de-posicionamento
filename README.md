@@ -27,6 +27,9 @@ uma **ideia**, escolher a **intenção**, escrever com a **sua voz**, sem cara d
 - **Post, artigo e carrossel.** Artigo com título e capa (1920×1080); carrossel em PDF (1080×1350) pronto para subir.
 - **Memória.** Você exporta a planilha de análises do LinkedIn e a skill lê sozinha: acha cada post, compara o
   resultado com a intenção e guarda o que você aprendeu. Ela nunca entra na sua conta.
+- **Painel no navegador e lembretes.** Uma página local mostra o que está pendente (link do post, planilha do
+  LinkedIn, intenção), o histórico com os números, ideias para o próximo post e a sua voz. E a skill lembra das
+  pendências logo na primeira resposta.
 - **Sigilo para conselheiros e administradores.** Alerta sobre deliberações, informação ainda não pública e casos que
   deixem deduzir a empresa. Para médicos, há também um módulo com as regras de publicidade do CFM.
 
